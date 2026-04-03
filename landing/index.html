@@ -487,16 +487,31 @@
     @media (max-width: 639px) {
       .hero-bg-photo {
         object-position: center 22%;
+        filter: saturate(1.01) hue-rotate(1.5deg) contrast(1.02) brightness(0.94);
       }
       .hero-dark-vignette {
+        /* Bottom-heavy darkening so type sits on a readable band */
         background:
           linear-gradient(
-            180deg,
-            rgba(255, 220, 190, 0.06) 0%,
-            rgba(230, 210, 185, 0.04) 32%,
-            rgba(32, 30, 28, 0.52) 100%
+            to top,
+            rgba(12, 10, 9, 0.78) 0%,
+            rgba(18, 16, 15, 0.45) 38%,
+            rgba(28, 24, 22, 0.12) 58%,
+            transparent 72%
           ),
-          radial-gradient(ellipse 100% 72% at 50% 28%, rgba(255, 205, 160, 0.04) 0%, rgba(58, 52, 48, 0.12) 62%);
+          linear-gradient(
+            180deg,
+            rgba(0, 0, 0, 0.42) 0%,
+            transparent 48%
+          ),
+          radial-gradient(
+            ellipse 110% 65% at 50% 30%,
+            rgba(0, 0, 0, 0.22) 0%,
+            transparent 62%
+          );
+      }
+      .hero-dark-sparkles {
+        opacity: 0.035;
       }
       .editorial-kicker {
         font-size: 0.625rem;
@@ -554,25 +569,25 @@
       <div class="hero-dark-vignette"></div>
       <div class="hero-dark-sparkles"></div>
     </div>
-    <header class="relative z-10 flex flex-1 flex-col justify-center px-4 sm:px-8 pt-28 pb-24 sm:pt-32 sm:pb-28">
-      <div class="max-w-[min(100%,18.5rem)] sm:max-w-3xl mx-auto text-center w-full">
-        <p class="mb-6 sm:mb-6 text-[0.53125rem] sm:text-[0.6875rem] font-medium uppercase tracking-[0.16em] sm:tracking-[0.22em] text-[#5c4034] [text-shadow:0_1px_18px_rgba(253,248,242,0.75)]">
+    <header class="relative z-10 flex flex-1 flex-col justify-center px-4 sm:px-8 pt-28 pb-28 sm:pt-32 sm:pb-28">
+      <div class="max-w-[min(100%,20rem)] sm:max-w-3xl mx-auto w-full text-center rounded-2xl border border-white/15 bg-black/35 px-4 py-8 shadow-[0_24px_48px_-12px_rgba(0,0,0,0.45)] backdrop-blur-[6px] sm:rounded-none sm:border-0 sm:bg-transparent sm:px-0 sm:py-0 sm:shadow-none sm:backdrop-blur-none">
+        <p class="mb-5 sm:mb-6 text-[0.625rem] sm:text-[0.6875rem] font-medium uppercase tracking-[0.18em] sm:tracking-[0.22em] text-[#f5ebe3] [text-shadow:0_1px_3px_rgba(0,0,0,0.55)] sm:[text-shadow:0_1px_18px_rgba(0,0,0,0.35)]">
           For mindful shoppers
         </p>
-        <h1 class="font-display text-[1.125rem] leading-[1.4] sm:text-5xl sm:leading-[1.05] md:text-[3.25rem] lg:text-[3.5rem] tracking-[-0.02em] mb-8 sm:mb-8 font-medium text-white text-balance [text-shadow:0_2px_28px_rgba(0,0,0,0.42)]">
+        <h1 class="font-display text-[1.3125rem] leading-[1.38] sm:text-5xl sm:leading-[1.05] md:text-[3.25rem] lg:text-[3.5rem] tracking-[-0.02em] mb-6 sm:mb-8 font-medium text-white text-balance [text-shadow:0_2px_20px_rgba(0,0,0,0.55),0_1px_3px_rgba(0,0,0,0.8)] sm:[text-shadow:0_2px_28px_rgba(0,0,0,0.42)]">
           The pause between <br class="sm:hidden">
           <span class="italic text-white">wanting</span> and buying.
         </h1>
-        <p class="text-[0.75rem] sm:text-lg font-light text-white/92 leading-[1.72] sm:leading-relaxed mb-11 sm:mb-10 max-w-xl mx-auto [text-shadow:0_1px_16px_rgba(0,0,0,0.35)]">
+        <p class="text-[0.8125rem] sm:text-lg font-light text-white/95 leading-[1.65] sm:leading-relaxed mb-8 sm:mb-10 max-w-xl mx-auto [text-shadow:0_1px_8px_rgba(0,0,0,0.65)] sm:[text-shadow:0_1px_16px_rgba(0,0,0,0.35)]">
           When you try to add something to your cart, Dilly asks you to wait a few seconds. You can still buy it — you just get a moment to decide on purpose.
         </p>
-        <div class="flex flex-col sm:flex-row items-center justify-center gap-7 sm:gap-7">
-          <a href="#waitlist" class="inline-flex w-fit max-w-[9rem] mx-auto sm:mx-0 sm:max-w-none items-center justify-center gap-1 shrink-0 bg-white text-[#0f1419] px-3 py-1.5 sm:px-9 sm:py-3.5 rounded-full text-[0.625rem] sm:text-sm font-semibold hover:bg-[#f2ece4] transition-colors shadow-[0_12px_40px_-12px_rgba(0,0,0,0.45)]">
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-5 sm:gap-7">
+          <a href="#waitlist" class="inline-flex w-fit max-w-[11rem] mx-auto sm:mx-0 sm:max-w-none items-center justify-center gap-1 shrink-0 bg-white text-[#0f1419] px-4 py-2 sm:px-9 sm:py-3.5 rounded-full text-xs sm:text-sm font-semibold hover:bg-[#f2ece4] transition-colors shadow-[0_12px_32px_-8px_rgba(0,0,0,0.55)]">
             Join the waitlist
           </a>
-          <a href="#how-it-works" class="editorial-link-hero-dark inline-flex items-center justify-center gap-1 py-0.5 text-[0.625rem] sm:text-[0.875rem]">See how it works&nbsp;<span aria-hidden="true">→</span></a>
+          <a href="#how-it-works" class="editorial-link-hero-dark inline-flex items-center justify-center gap-1 py-1 text-[0.75rem] sm:text-[0.875rem] [text-shadow:0_1px_6px_rgba(0,0,0,0.75)]">See how it works&nbsp;<span aria-hidden="true">→</span></a>
         </div>
-        <p class="mt-10 sm:mt-9 text-[8px] sm:text-xs font-medium tracking-[0.14em] sm:tracking-[0.2em] uppercase text-white/50">
+        <p class="mt-8 sm:mt-9 text-[10px] sm:text-xs font-medium tracking-[0.15em] sm:tracking-[0.2em] uppercase text-white/70 sm:text-white/50 [text-shadow:0_1px_4px_rgba(0,0,0,0.6)]">
           Coming soon · Chrome extension · Free · No account
         </p>
       </div>
