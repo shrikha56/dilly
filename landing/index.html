@@ -380,9 +380,6 @@
       box-shadow:
         0 1px 0 rgba(255, 255, 255, 0.75) inset,
         0 10px 36px -18px rgba(59, 35, 20, 0.1);
-      padding-top: env(safe-area-inset-top, 0px);
-      padding-left: env(safe-area-inset-left, 0px);
-      padding-right: env(safe-area-inset-right, 0px);
     }
     #site-nav .nav-link {
       color: rgba(59, 35, 20, 0.78);
@@ -483,76 +480,15 @@
         rgba(245, 239, 232, 0.62) 100%
       );
     }
-    /* Mobile: no horizontal scroll; notched devices — safe areas */
-    html {
-      overflow-x: clip;
-    }
-    body {
-      padding-bottom: max(6rem, calc(env(safe-area-inset-bottom, 0px) + 4.5rem));
-    }
-    #nav-mobile-panel:not(.hidden) {
-      padding-bottom: max(0.75rem, env(safe-area-inset-bottom, 0px));
-    }
-    .nav-mobile-link {
-      color: rgba(59, 35, 20, 0.88);
-      text-decoration: none;
-      border-radius: 0.75rem;
-      padding: 0.65rem 0.75rem;
-      margin: 0 -0.75rem;
-      transition: background 0.15s ease, color 0.15s ease;
-    }
-    .nav-mobile-link:active {
-      background: rgba(59, 35, 20, 0.06);
-    }
-    @media (min-width: 768px) {
-      body {
-        padding-bottom: 6rem;
-      }
-    }
-    @media (max-width: 639px) {
-      .footer-polka-text {
-        padding: 1.5rem 1.25rem;
-      }
-      .editorial-kicker {
-        font-size: 0.625rem;
-        letter-spacing: 0.22em;
-      }
-      .dilly-shot-title {
-        font-size: 1.2rem;
-      }
-      .dilly-shot-desc {
-        font-size: 0.8125rem;
-      }
-      /* Dots: large tap target without huge visible grey circles */
-      .dilly-shot-carousel-dot {
-        width: 0.45rem;
-        height: 0.45rem;
-        padding: 0.65rem;
-        margin: -0.65rem;
-        box-sizing: content-box;
-        background-clip: content-box;
-      }
-    }
   </style>
 </head>
-<body class="bg-[#f8f1ea] text-[#3B2314] font-sans antialiased selection:bg-[#C9897A]/25 selection:text-[#3B2314] md:pb-24">
+<body class="bg-[#f8f1ea] text-[#3B2314] font-sans antialiased selection:bg-[#C9897A]/25 selection:text-[#3B2314] pb-24">
 
   <div class="bg-atmosphere" aria-hidden="true"></div>
 
   <!-- Navigation — warm frosted bar (matches editorial palette on hero + body) -->
   <nav id="site-nav" class="fixed w-full top-0 z-50 transition-colors duration-300">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 relative flex md:grid md:grid-cols-[1fr_auto_1fr] items-center h-16 sm:h-[4.25rem] gap-2 md:gap-0">
-      <button
-        type="button"
-        id="nav-menu-toggle"
-        class="md:hidden shrink-0 rounded-xl p-2 -ml-1 text-[#3B2314] hover:bg-[#3B2314]/[0.06] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#a86b5c]/50"
-        aria-expanded="false"
-        aria-controls="nav-mobile-panel"
-        aria-label="Open menu"
-      >
-        <iconify-icon id="nav-menu-icon-open" icon="solar:hamburger-menu-linear" class="text-2xl block" aria-hidden="true"></iconify-icon>
-        <iconify-icon id="nav-menu-icon-close" icon="solar:close-circle-linear" class="text-2xl hidden" aria-hidden="true"></iconify-icon>
-      </button>
+    <div class="max-w-6xl mx-auto px-5 sm:px-6 relative flex md:grid md:grid-cols-[1fr_auto_1fr] items-center h-16 sm:h-[4.25rem]">
       <div class="hidden md:flex items-center gap-4 lg:gap-6 justify-self-start flex-wrap">
         <a href="#why-it-exists" class="nav-link text-sm font-medium transition-colors">Why it exists</a>
         <a href="#the-experience" class="nav-link text-sm font-medium transition-colors">The experience</a>
@@ -560,29 +496,15 @@
         <a href="#faq" class="nav-link text-sm font-medium transition-colors">FAQ</a>
         <a href="#waitlist" class="nav-link text-sm font-medium transition-colors">Waitlist</a>
       </div>
-      <a href="#" class="nav-logo font-display text-lg sm:text-2xl tracking-tight italic font-semibold flex-1 text-center min-w-0 md:flex-none md:justify-self-center transition-colors">Dilly</a>
-      <div class="shrink-0 md:ml-auto md:justify-self-end">
-        <a href="#waitlist" class="nav-cta inline-flex items-center justify-center rounded-full text-xs sm:text-sm font-semibold px-3.5 py-2 sm:px-5 sm:py-2.5 transition-colors whitespace-nowrap">Join waitlist</a>
-      </div>
-    </div>
-    <div
-      id="nav-mobile-panel"
-      class="hidden md:hidden border-t border-[#3B2314]/[0.09] bg-[rgba(253,248,242,0.96)] backdrop-blur-xl shadow-[0_12px_32px_-16px_rgba(59,35,20,0.12)]"
-      role="dialog"
-      aria-label="Section links"
-    >
-      <div class="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex flex-col">
-        <a href="#why-it-exists" class="nav-mobile-link text-[0.9375rem] font-medium">Why it exists</a>
-        <a href="#the-experience" class="nav-mobile-link text-[0.9375rem] font-medium">The experience</a>
-        <a href="#how-it-works" class="nav-mobile-link text-[0.9375rem] font-medium">How it works</a>
-        <a href="#faq" class="nav-mobile-link text-[0.9375rem] font-medium">FAQ</a>
-        <a href="#waitlist" class="nav-mobile-link text-[0.9375rem] font-medium">Waitlist</a>
+      <a href="#" class="nav-logo font-display text-xl sm:text-2xl tracking-tight italic font-semibold absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0 md:justify-self-center transition-colors">Dilly</a>
+      <div class="ml-auto justify-self-end">
+        <a href="#waitlist" class="nav-cta inline-flex items-center justify-center rounded-full text-xs sm:text-sm font-semibold px-4 py-2 sm:px-5 sm:py-2.5 transition-colors">Join waitlist</a>
       </div>
     </div>
   </nav>
 
   <!-- Hero — dark editorial: same header asset as full-bleed blurred bg (Phia-style) -->
-  <section id="hero-dark" class="relative isolate min-h-[min(88svh,36rem)] sm:min-h-[min(100svh,52rem)] flex flex-col border-b border-white/[0.06] overflow-hidden">
+  <section id="hero-dark" class="relative isolate min-h-[min(100svh,52rem)] flex flex-col border-b border-white/[0.06] overflow-hidden">
     <div class="absolute inset-0 z-0 overflow-hidden bg-[#403c38]" aria-hidden="true">
       <img
         class="hero-bg-photo"
@@ -602,25 +524,25 @@
       <div class="hero-dark-vignette"></div>
       <div class="hero-dark-sparkles"></div>
     </div>
-    <header class="relative z-10 flex flex-1 flex-col justify-center px-4 sm:px-8 pt-24 pb-14 sm:pt-32 sm:pb-28">
+    <header class="relative z-10 flex flex-1 flex-col justify-center px-5 sm:px-8 pt-28 pb-20 sm:pt-32 sm:pb-28">
       <div class="max-w-3xl mx-auto text-center w-full">
-        <p class="mb-4 sm:mb-6 text-[0.625rem] sm:text-[0.6875rem] font-medium uppercase tracking-[0.2em] sm:tracking-[0.22em] text-[#5c4034] [text-shadow:0_1px_18px_rgba(253,248,242,0.75)]">
+        <p class="mb-5 sm:mb-6 text-[0.65rem] sm:text-[0.6875rem] font-medium uppercase tracking-[0.22em] text-[#5c4034] [text-shadow:0_1px_18px_rgba(253,248,242,0.75)]">
           For mindful shoppers
         </p>
-        <h1 class="font-display text-[1.75rem] leading-[1.12] sm:text-5xl sm:leading-[1.05] md:text-[3.25rem] lg:text-[3.5rem] tracking-[-0.02em] mb-5 sm:mb-8 font-medium text-white text-balance [text-shadow:0_2px_32px_rgba(0,0,0,0.35)]">
+        <h1 class="font-display text-[2.35rem] sm:text-5xl md:text-[3.25rem] lg:text-[3.5rem] tracking-[-0.02em] leading-[1.05] mb-6 sm:mb-8 font-medium text-white text-balance [text-shadow:0_2px_32px_rgba(0,0,0,0.35)]">
           The pause between <br class="sm:hidden">
           <span class="italic text-white">wanting</span> and buying.
         </h1>
-        <p class="text-sm sm:text-lg font-light text-white/90 leading-relaxed mb-7 sm:mb-10 max-w-xl mx-auto [text-shadow:0_1px_20px_rgba(0,0,0,0.3)]">
+        <p class="text-base sm:text-lg font-light text-white/90 leading-relaxed mb-9 sm:mb-10 max-w-xl mx-auto [text-shadow:0_1px_20px_rgba(0,0,0,0.3)]">
           When you try to add something to your cart, Dilly asks you to wait a few seconds. You can still buy it — you just get a moment to decide on purpose.
         </p>
-        <div class="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6">
-          <a href="#waitlist" class="inline-flex items-center justify-center gap-2 w-auto max-w-[16rem] sm:max-w-none bg-white text-[#0f1419] px-6 py-2.5 sm:px-9 sm:py-3.5 rounded-full text-sm font-semibold hover:bg-[#f2ece4] transition-colors shadow-[0_12px_40px_-12px_rgba(0,0,0,0.45)]">
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-4 sm:gap-6">
+          <a href="#waitlist" class="inline-flex items-center justify-center gap-2 w-full sm:w-auto bg-white text-[#0f1419] px-8 sm:px-9 py-3.5 rounded-full text-sm font-semibold hover:bg-[#f2ece4] transition-colors shadow-[0_12px_40px_-12px_rgba(0,0,0,0.45)]">
             Join the waitlist
           </a>
-          <a href="#how-it-works" class="editorial-link-hero-dark inline-flex items-center justify-center gap-1 py-1.5 text-[0.8125rem] sm:text-[0.875rem]">See how it works&nbsp;<span aria-hidden="true">→</span></a>
+          <a href="#how-it-works" class="editorial-link-hero-dark inline-flex items-center justify-center gap-1 py-2">See how it works&nbsp;<span aria-hidden="true">→</span></a>
         </div>
-        <p class="mt-6 sm:mt-8 text-[10px] sm:text-xs font-medium tracking-[0.18em] sm:tracking-[0.2em] uppercase text-white/38">
+        <p class="mt-7 sm:mt-8 text-[11px] sm:text-xs font-medium tracking-[0.2em] uppercase text-white/38">
           Coming soon · Chrome extension · Free · No account
         </p>
       </div>
@@ -628,26 +550,26 @@
   </section>
 
   <!-- Problem / Solution -->
-  <section id="why-it-exists" class="py-16 sm:py-32 lg:py-40 relative bg-white/60 border-y border-[#3B2314]/[0.06] scroll-mt-24">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6">
-      <p class="editorial-kicker text-center mb-3 sm:mb-4">Why it exists</p>
-      <h2 class="font-display text-[1.625rem] leading-snug sm:text-4xl md:text-5xl tracking-tight mb-8 sm:mb-20 text-center font-medium text-[#3B2314] max-w-3xl mx-auto px-1">
+  <section id="why-it-exists" class="py-24 sm:py-32 lg:py-40 relative bg-white/60 border-y border-[#3B2314]/[0.06] scroll-mt-24">
+    <div class="max-w-6xl mx-auto px-5 sm:px-6">
+      <p class="editorial-kicker text-center mb-4">Why it exists</p>
+      <h2 class="font-display text-3xl sm:text-4xl md:text-5xl tracking-tight mb-14 sm:mb-20 text-center font-medium text-[#3B2314] max-w-3xl mx-auto">
         Shopping sites are built to go fast.
       </h2>
-      <div class="grid md:grid-cols-2 gap-8 sm:gap-12 md:gap-20 items-start">
-        <div class="space-y-5 sm:space-y-6 order-2 md:order-1">
-          <p class="text-[#3B2314]/80 text-[0.9375rem] sm:text-xl font-light leading-relaxed">
+      <div class="grid md:grid-cols-2 gap-12 md:gap-20 items-start">
+        <div class="space-y-6 order-2 md:order-1">
+          <p class="text-[#3B2314]/80 text-lg sm:text-xl font-light leading-relaxed">
             Timers, urgency copy, and one-click checkout are there to shorten the gap between impulse and order. That can work against you when you&rsquo;re tired or distracted.
           </p>
-          <p class="text-[#3B2314]/80 text-[0.9375rem] sm:text-xl font-light leading-relaxed">
+          <p class="text-[#3B2314]/80 text-lg sm:text-xl font-light leading-relaxed">
             Dilly doesn&rsquo;t block purchases. It adds a short pause at the moment you try to add to cart, so you can choose with a clear head.
           </p>
         </div>
-        <div class="order-1 md:order-2 rounded-2xl p-6 sm:p-10 bg-gradient-to-br from-white/90 to-[#ebe3d6]/80 border border-[#3B2314]/[0.08] shadow-lift-sm">
-          <h3 class="font-display text-xl sm:text-3xl tracking-tight mb-4 sm:mb-5 text-[#3B2314] font-medium">
+        <div class="order-1 md:order-2 rounded-2xl p-8 sm:p-10 bg-gradient-to-br from-white/90 to-[#ebe3d6]/80 border border-[#3B2314]/[0.08] shadow-lift-sm">
+          <h3 class="font-display text-2xl sm:text-3xl tracking-tight mb-5 text-[#3B2314] font-medium">
             Take a pause.
           </h3>
-          <p class="text-[#3B2314]/80 text-[0.9375rem] sm:text-lg font-light leading-relaxed">
+          <p class="text-[#3B2314]/80 text-base sm:text-lg font-light leading-relaxed">
             You stay in control: wait out the timer and add the item, or tap &ldquo;not today.&rdquo; Optional stats are just for you — if you enable them, they stay in your browser.
           </p>
         </div>
@@ -656,14 +578,14 @@
   </section>
 
   <!-- Extension UI (matches Chrome extension design) -->
-  <section id="the-experience" class="scroll-mt-24 py-16 sm:py-32 relative dilly-bg-experience border-y border-[#3B2314]/[0.06]">
-    <div class="px-3 sm:px-6">
-      <div class="max-w-6xl mx-auto text-center mb-10 sm:mb-20">
-        <p class="editorial-kicker mb-3 sm:mb-4">In the browser</p>
-        <h2 class="font-display text-[1.625rem] leading-snug sm:text-4xl md:text-5xl tracking-tight font-medium text-[#3B2314] px-1">
+  <section id="the-experience" class="scroll-mt-24 py-24 sm:py-32 relative dilly-bg-experience border-y border-[#3B2314]/[0.06]">
+    <div class="px-4 sm:px-6">
+      <div class="max-w-6xl mx-auto text-center mb-14 sm:mb-20">
+        <p class="editorial-kicker mb-4">In the browser</p>
+        <h2 class="font-display text-3xl sm:text-4xl md:text-5xl tracking-tight font-medium text-[#3B2314]">
           What you&rsquo;ll see
         </h2>
-        <p class="mt-4 sm:mt-5 text-[#3B2314]/70 max-w-2xl mx-auto font-light text-sm sm:text-lg leading-relaxed">
+        <p class="mt-5 text-[#3B2314]/70 max-w-2xl mx-auto font-light text-base sm:text-lg">
           Real captures on Princess Polly (online fashion retailer) &mdash; pause overlay, sidebar, and settings.
         </p>
       </div>
@@ -762,44 +684,44 @@
   </section>
 
   <!-- How It Works -->
-  <section id="how-it-works" class="scroll-mt-24 py-16 sm:py-32 lg:py-40 relative bg-[#f8f1ea]/50">
+  <section id="how-it-works" class="scroll-mt-24 py-24 sm:py-32 lg:py-40 relative bg-[#f8f1ea]/50">
     <div class="absolute inset-0 bg-gradient-to-b from-transparent via-[#ebe3d6]/15 to-transparent pointer-events-none -z-10"></div>
-    <div class="max-w-6xl mx-auto px-4 sm:px-6">
-      <div class="text-center mb-10 sm:mb-20">
-        <p class="editorial-kicker mb-3 sm:mb-4">The flow</p>
-        <h2 class="font-display text-[1.625rem] leading-snug sm:text-4xl md:text-5xl tracking-tight mb-4 sm:mb-6 font-medium text-[#3B2314]">
+    <div class="max-w-6xl mx-auto px-5 sm:px-6">
+      <div class="text-center mb-16 sm:mb-20">
+        <p class="editorial-kicker mb-4">The flow</p>
+        <h2 class="font-display text-3xl sm:text-4xl md:text-5xl tracking-tight mb-6 font-medium text-[#3B2314]">
           How it works
         </h2>
-        <p class="text-sm sm:text-lg font-light text-[#3B2314]/70 max-w-xl mx-auto leading-relaxed">Dilly runs only when you try to add something to your cart (or a similar checkout step).</p>
+        <p class="text-base sm:text-lg font-light text-[#3B2314]/70 max-w-xl mx-auto">Dilly runs only when you try to add something to your cart (or a similar checkout step).</p>
       </div>
 
-      <div class="grid md:grid-cols-3 gap-8 sm:gap-12 md:gap-10 lg:gap-14 max-w-5xl mx-auto">
+      <div class="grid md:grid-cols-3 gap-12 md:gap-10 lg:gap-14 max-w-5xl mx-auto">
         <article class="how-flow-step text-left">
-          <p class="dilly-shot-step mb-2 sm:mb-3">01 — Browse</p>
-          <h3 class="font-display text-[1.2rem] sm:text-[1.55rem] tracking-tight text-[#3B2314] font-medium leading-snug mb-2 sm:mb-3">
+          <p class="dilly-shot-step mb-3">01 — Browse</p>
+          <h3 class="font-display text-[1.45rem] sm:text-[1.55rem] tracking-tight text-[#3B2314] font-medium leading-snug mb-3">
             Shop as usual
           </h3>
-          <p class="text-[#3B2314]/72 text-[0.875rem] sm:text-[0.9375rem] leading-relaxed font-light">
+          <p class="text-[#3B2314]/72 text-[0.9375rem] leading-relaxed font-light">
             Browse normally. Dilly stays out of the way until you try to add to cart or buy.
           </p>
         </article>
 
         <article class="how-flow-step text-left">
-          <p class="dilly-shot-step mb-2 sm:mb-3">02 — Pause</p>
-          <h3 class="font-display text-[1.2rem] sm:text-[1.55rem] tracking-tight text-[#3B2314] font-medium leading-snug mb-2 sm:mb-3">
+          <p class="dilly-shot-step mb-3">02 — Pause</p>
+          <h3 class="font-display text-[1.45rem] sm:text-[1.55rem] tracking-tight text-[#3B2314] font-medium leading-snug mb-3">
             Short pause
           </h3>
-          <p class="text-[#3B2314]/72 text-[0.875rem] sm:text-[0.9375rem] leading-relaxed font-light">
+          <p class="text-[#3B2314]/72 text-[0.9375rem] leading-relaxed font-light">
             A small overlay appears with a timer you set (often starting around 10 seconds; you can choose 30, 60, or more in settings).
           </p>
         </article>
 
         <article class="how-flow-step text-left">
-          <p class="dilly-shot-step mb-2 sm:mb-3">03 — Decide</p>
-          <h3 class="font-display text-[1.2rem] sm:text-[1.55rem] tracking-tight text-[#3B2314] font-medium leading-snug mb-2 sm:mb-3">
+          <p class="dilly-shot-step mb-3">03 — Decide</p>
+          <h3 class="font-display text-[1.45rem] sm:text-[1.55rem] tracking-tight text-[#3B2314] font-medium leading-snug mb-3">
             You choose
           </h3>
-          <p class="text-[#3B2314]/72 text-[0.875rem] sm:text-[0.9375rem] leading-relaxed font-light">
+          <p class="text-[#3B2314]/72 text-[0.9375rem] leading-relaxed font-light">
             When the timer ends, continue to checkout or step away. Optional stats stay only on your computer.
           </p>
         </article>
@@ -808,18 +730,18 @@
   </section>
 
   <!-- FAQ -->
-  <section id="faq" class="scroll-mt-24 py-16 sm:py-32 relative border-y border-[#3B2314]/[0.06] bg-white/55">
-    <div class="max-w-2xl mx-auto px-4 sm:px-6">
-      <p class="editorial-kicker text-center mb-3 sm:mb-4">FAQ</p>
-      <h2 class="font-display text-[1.625rem] leading-snug sm:text-4xl md:text-[2.75rem] tracking-tight text-center font-medium text-[#3B2314] mb-3 sm:mb-4">
+  <section id="faq" class="scroll-mt-24 py-24 sm:py-32 relative border-y border-[#3B2314]/[0.06] bg-white/55">
+    <div class="max-w-2xl mx-auto px-5 sm:px-6">
+      <p class="editorial-kicker text-center mb-4">FAQ</p>
+      <h2 class="font-display text-3xl sm:text-4xl md:text-[2.75rem] tracking-tight text-center font-medium text-[#3B2314] mb-4">
         Common questions
       </h2>
-      <p class="text-center text-xs sm:text-base text-[#3B2314]/65 font-light mb-8 sm:mb-12 max-w-lg mx-auto leading-relaxed">
+      <p class="text-center text-sm sm:text-base text-[#3B2314]/65 font-light mb-12 max-w-lg mx-auto leading-relaxed">
         Quick answers about how Dilly fits into your shopping.
       </p>
       <div class="dilly-faq space-y-3">
-        <details class="group rounded-2xl border border-[#3B2314]/[0.1] bg-[#fbf7f2]/60 px-4 py-3.5 sm:px-5 sm:py-4 transition-shadow open:shadow-lift-sm">
-          <summary class="flex cursor-pointer items-center justify-between gap-3 text-left text-[0.9375rem] sm:text-base font-medium text-[#3B2314]">
+        <details class="group rounded-2xl border border-[#3B2314]/[0.1] bg-[#fbf7f2]/60 px-5 py-4 transition-shadow open:shadow-lift-sm">
+          <summary class="flex cursor-pointer items-center justify-between gap-3 text-left text-base font-medium text-[#3B2314]">
             Does Dilly stop me from buying things?
             <iconify-icon icon="solar:alt-arrow-down-linear" class="text-xl shrink-0 text-[#a86b5c] transition-transform duration-200 group-open:rotate-180"></iconify-icon>
           </summary>
@@ -827,8 +749,8 @@
             No. After the pause ends, you can add to bag or close the overlay. Dilly adds a moment to decide &mdash; it doesn&rsquo;t block checkout.
           </p>
         </details>
-        <details class="group rounded-2xl border border-[#3B2314]/[0.1] bg-[#fbf7f2]/60 px-4 py-3.5 sm:px-5 sm:py-4 transition-shadow open:shadow-lift-sm">
-          <summary class="flex cursor-pointer items-center justify-between gap-3 text-left text-[0.9375rem] sm:text-base font-medium text-[#3B2314]">
+        <details class="group rounded-2xl border border-[#3B2314]/[0.1] bg-[#fbf7f2]/60 px-5 py-4 transition-shadow open:shadow-lift-sm">
+          <summary class="flex cursor-pointer items-center justify-between gap-3 text-left text-base font-medium text-[#3B2314]">
             Do I need an account?
             <iconify-icon icon="solar:alt-arrow-down-linear" class="text-xl shrink-0 text-[#a86b5c] transition-transform duration-200 group-open:rotate-180"></iconify-icon>
           </summary>
@@ -836,8 +758,8 @@
             No sign-up. When Dilly is on the Chrome Web Store, you&rsquo;ll install it like any extension and use it locally. Optional stats stay on your device.
           </p>
         </details>
-        <details class="group rounded-2xl border border-[#3B2314]/[0.1] bg-[#fbf7f2]/60 px-4 py-3.5 sm:px-5 sm:py-4 transition-shadow open:shadow-lift-sm">
-          <summary class="flex cursor-pointer items-center justify-between gap-3 text-left text-[0.9375rem] sm:text-base font-medium text-[#3B2314]">
+        <details class="group rounded-2xl border border-[#3B2314]/[0.1] bg-[#fbf7f2]/60 px-5 py-4 transition-shadow open:shadow-lift-sm">
+          <summary class="flex cursor-pointer items-center justify-between gap-3 text-left text-base font-medium text-[#3B2314]">
             Is my browsing data sent anywhere?
             <iconify-icon icon="solar:alt-arrow-down-linear" class="text-xl shrink-0 text-[#a86b5c] transition-transform duration-200 group-open:rotate-180"></iconify-icon>
           </summary>
@@ -845,8 +767,8 @@
             Dilly is built for privacy-first use: nothing is synced to our servers for accounts you don&rsquo;t have. Behaviour stays in your browser per Chrome&rsquo;s extension model.
           </p>
         </details>
-        <details class="group rounded-2xl border border-[#3B2314]/[0.1] bg-[#fbf7f2]/60 px-4 py-3.5 sm:px-5 sm:py-4 transition-shadow open:shadow-lift-sm">
-          <summary class="flex cursor-pointer items-center justify-between gap-3 text-left text-[0.9375rem] sm:text-base font-medium text-[#3B2314]">
+        <details class="group rounded-2xl border border-[#3B2314]/[0.1] bg-[#fbf7f2]/60 px-5 py-4 transition-shadow open:shadow-lift-sm">
+          <summary class="flex cursor-pointer items-center justify-between gap-3 text-left text-base font-medium text-[#3B2314]">
             When does the pause appear?
             <iconify-icon icon="solar:alt-arrow-down-linear" class="text-xl shrink-0 text-[#a86b5c] transition-transform duration-200 group-open:rotate-180"></iconify-icon>
           </summary>
@@ -854,8 +776,8 @@
             When you try to add something to your cart (or a similar step on supported sites). You can adjust thresholds and pause length in settings.
           </p>
         </details>
-        <details class="group rounded-2xl border border-[#3B2314]/[0.1] bg-[#fbf7f2]/60 px-4 py-3.5 sm:px-5 sm:py-4 transition-shadow open:shadow-lift-sm">
-          <summary class="flex cursor-pointer items-center justify-between gap-3 text-left text-[0.9375rem] sm:text-base font-medium text-[#3B2314]">
+        <details class="group rounded-2xl border border-[#3B2314]/[0.1] bg-[#fbf7f2]/60 px-5 py-4 transition-shadow open:shadow-lift-sm">
+          <summary class="flex cursor-pointer items-center justify-between gap-3 text-left text-base font-medium text-[#3B2314]">
             Is Dilly free?
             <iconify-icon icon="solar:alt-arrow-down-linear" class="text-xl shrink-0 text-[#a86b5c] transition-transform duration-200 group-open:rotate-180"></iconify-icon>
           </summary>
@@ -863,8 +785,8 @@
             Yes &mdash; free to install. No in-app subscriptions pitched here.
           </p>
         </details>
-        <details class="group rounded-2xl border border-[#3B2314]/[0.1] bg-[#fbf7f2]/60 px-4 py-3.5 sm:px-5 sm:py-4 transition-shadow open:shadow-lift-sm">
-          <summary class="flex cursor-pointer items-center justify-between gap-3 text-left text-[0.9375rem] sm:text-base font-medium text-[#3B2314]">
+        <details class="group rounded-2xl border border-[#3B2314]/[0.1] bg-[#fbf7f2]/60 px-5 py-4 transition-shadow open:shadow-lift-sm">
+          <summary class="flex cursor-pointer items-center justify-between gap-3 text-left text-base font-medium text-[#3B2314]">
             Which sites does it work on?
             <iconify-icon icon="solar:alt-arrow-down-linear" class="text-xl shrink-0 text-[#a86b5c] transition-transform duration-200 group-open:rotate-180"></iconify-icon>
           </summary>
@@ -872,8 +794,8 @@
             Dilly is built for shopping sites where you add items to a cart or bag. It won&rsquo;t run on every URL &mdash; it activates on supported checkout-style flows. If something doesn&rsquo;t trigger yet, settings and updates over time can improve coverage.
           </p>
         </details>
-        <details class="group rounded-2xl border border-[#3B2314]/[0.1] bg-[#fbf7f2]/60 px-4 py-3.5 sm:px-5 sm:py-4 transition-shadow open:shadow-lift-sm">
-          <summary class="flex cursor-pointer items-center justify-between gap-3 text-left text-[0.9375rem] sm:text-base font-medium text-[#3B2314]">
+        <details class="group rounded-2xl border border-[#3B2314]/[0.1] bg-[#fbf7f2]/60 px-5 py-4 transition-shadow open:shadow-lift-sm">
+          <summary class="flex cursor-pointer items-center justify-between gap-3 text-left text-base font-medium text-[#3B2314]">
             Does it work on mobile?
             <iconify-icon icon="solar:alt-arrow-down-linear" class="text-xl shrink-0 text-[#a86b5c] transition-transform duration-200 group-open:rotate-180"></iconify-icon>
           </summary>
@@ -881,8 +803,8 @@
             Dilly is a <strong class="font-medium text-[#3B2314]/85">Chrome desktop extension</strong>. It doesn&rsquo;t run in mobile Safari or Chrome on phones the same way. Use it in Chrome on your computer.
           </p>
         </details>
-        <details class="group rounded-2xl border border-[#3B2314]/[0.1] bg-[#fbf7f2]/60 px-4 py-3.5 sm:px-5 sm:py-4 transition-shadow open:shadow-lift-sm">
-          <summary class="flex cursor-pointer items-center justify-between gap-3 text-left text-[0.9375rem] sm:text-base font-medium text-[#3B2314]">
+        <details class="group rounded-2xl border border-[#3B2314]/[0.1] bg-[#fbf7f2]/60 px-5 py-4 transition-shadow open:shadow-lift-sm">
+          <summary class="flex cursor-pointer items-center justify-between gap-3 text-left text-base font-medium text-[#3B2314]">
             Can I pause or turn Dilly off?
             <iconify-icon icon="solar:alt-arrow-down-linear" class="text-xl shrink-0 text-[#a86b5c] transition-transform duration-200 group-open:rotate-180"></iconify-icon>
           </summary>
@@ -895,7 +817,7 @@
   </section>
 
   <!-- Final CTA -->
-  <section class="relative isolate overflow-hidden py-20 sm:py-40 md:py-44 text-center min-h-[18rem] sm:min-h-[30rem] flex flex-col justify-center border-t border-[#3B2314]/[0.06]">
+  <section class="relative isolate overflow-hidden py-32 sm:py-40 md:py-44 text-center min-h-[26rem] sm:min-h-[30rem] flex flex-col justify-center border-t border-[#3B2314]/[0.06]">
     <div class="absolute inset-0 z-0 bg-[#e5d9cc]" aria-hidden="true">
       <img
         class="final-cta-photo"
@@ -910,20 +832,20 @@
       <div class="final-cta-scrim"></div>
       <div class="final-cta-bottom-fade" aria-hidden="true"></div>
     </div>
-    <div class="max-w-2xl mx-auto px-4 sm:px-6 relative z-10">
-      <h2 class="font-display text-[1.75rem] leading-tight sm:text-5xl md:text-6xl tracking-tight mb-4 sm:mb-6 font-medium text-[#3B2314] sm:leading-[1.08]">
+    <div class="max-w-2xl mx-auto px-5 sm:px-6 relative z-10">
+      <h2 class="font-display text-4xl sm:text-5xl md:text-6xl tracking-tight mb-6 font-medium text-[#3B2314] leading-[1.08]">
         Give yourself <br class="hidden sm:block"> a moment.
       </h2>
-      <p class="text-sm sm:text-lg font-light text-[#3B2314]/85 mb-7 sm:mb-10 max-w-md mx-auto leading-relaxed">
+      <p class="text-base sm:text-lg font-light text-[#3B2314]/85 mb-10 max-w-md mx-auto">
         Launching soon on the Chrome Web Store. Join the waitlist and we&rsquo;ll email you once.
       </p>
-      <a href="#waitlist" class="inline-flex items-center justify-center gap-2 bg-[#3B2314] text-[#fbf7f2] px-7 py-2.5 sm:px-9 sm:py-3.5 rounded-full text-sm sm:text-base font-medium hover:bg-[#2C1A0E] transition-colors shadow-[0_12px_36px_-10px_rgba(59,35,20,0.3)]">
+      <a href="#waitlist" class="inline-flex items-center justify-center gap-2 bg-[#3B2314] text-[#fbf7f2] px-9 py-3.5 rounded-full text-base font-medium hover:bg-[#2C1A0E] transition-colors shadow-[0_12px_36px_-10px_rgba(59,35,20,0.3)]">
         Join the waitlist
       </a>
     </div>
   </section>
 
-  <footer class="footer-polka relative px-4 sm:px-8 pt-10 sm:pt-16 pb-12 sm:pb-16">
+  <footer class="footer-polka relative px-5 sm:px-8 pt-12 sm:pt-16 pb-14 sm:pb-16">
     <div class="footer-polka-text max-w-md mx-auto flex flex-col items-center text-center gap-7">
       <div>
         <div class="font-display text-xl tracking-tight italic text-[#3B2314] font-semibold mb-1">Dilly</div>
@@ -933,10 +855,10 @@
       <!-- Waitlist: Basic HTML POST to Formspree (success = Formspree thank-you page, or set redirect in Formspree dashboard) -->
       <div id="waitlist" class="scroll-mt-24 w-full max-w-md mx-auto rounded-2xl border border-[#3B2314]/[0.1] bg-[#fbf7f2]/85 px-5 py-6 sm:px-6 sm:py-7 text-left">
         <p class="editorial-kicker text-center mb-2">Waitlist</p>
-        <h3 class="font-display text-lg sm:text-2xl text-[#3B2314] font-medium text-center mb-2 leading-snug">
+        <h3 class="font-display text-xl sm:text-2xl text-[#3B2314] font-medium text-center mb-2 leading-snug">
           Get notified at launch
         </h3>
-        <p class="text-xs sm:text-sm text-[#3B2314]/68 font-light leading-relaxed text-center mb-4 sm:mb-5">
+        <p class="text-sm text-[#3B2314]/68 font-light leading-relaxed text-center mb-5">
           Leave your email and we&rsquo;ll send one message when Dilly is on the Chrome Web Store.
         </p>
         <form
@@ -982,7 +904,7 @@
   </footer>
 
   <!-- Floating CTA — hidden until you scroll past the hero (reduces duplicate CTAs on first paint) -->
-  <div id="floating-cta" class="floating-cta--off fixed left-1/2 -translate-x-1/2 z-[60] w-[min(calc(100vw-1.5rem),24rem)] bottom-[max(1.25rem,env(safe-area-inset-bottom,0px))]" aria-hidden="true">
+  <div id="floating-cta" class="floating-cta--off fixed bottom-5 left-1/2 -translate-x-1/2 z-[60] w-[min(calc(100vw-1.5rem),24rem)]" aria-hidden="true">
     <a href="#waitlist" class="flex w-full items-center justify-center gap-2 rounded-full border border-[#3B2314]/[0.12] bg-[#fbf7f2]/95 text-[#3B2314] px-5 py-3.5 text-sm font-medium hover:bg-white transition-colors">
       Join the waitlist
     </a>
@@ -990,38 +912,6 @@
 
   <script>
     (function () {
-      var menuToggle = document.getElementById('nav-menu-toggle');
-      var mobilePanel = document.getElementById('nav-mobile-panel');
-      var iconOpen = document.getElementById('nav-menu-icon-open');
-      var iconClose = document.getElementById('nav-menu-icon-close');
-      if (menuToggle && mobilePanel) {
-        function setMenuOpen(open) {
-          menuToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
-          menuToggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
-          mobilePanel.classList.toggle('hidden', !open);
-          if (iconOpen && iconClose) {
-            iconOpen.classList.toggle('hidden', open);
-            iconClose.classList.toggle('hidden', !open);
-          }
-          document.body.style.overflow = open ? 'hidden' : '';
-        }
-        menuToggle.addEventListener('click', function () {
-          var open = menuToggle.getAttribute('aria-expanded') === 'true';
-          setMenuOpen(!open);
-        });
-        mobilePanel.querySelectorAll('a[href^="#"]').forEach(function (a) {
-          a.addEventListener('click', function () {
-            setMenuOpen(false);
-          });
-        });
-        document.addEventListener('keydown', function (e) {
-          if (e.key === 'Escape' && menuToggle.getAttribute('aria-expanded') === 'true') {
-            setMenuOpen(false);
-            menuToggle.focus();
-          }
-        });
-      }
-
       var hero = document.getElementById('hero-dark');
       var floatBar = document.getElementById('floating-cta');
       if (hero && floatBar) {
