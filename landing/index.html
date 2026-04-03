@@ -58,15 +58,22 @@
         radial-gradient(ellipse 100% 60% at 50% 100%, rgba(234, 225, 211, 0.4), transparent 55%),
         linear-gradient(168deg, #fdfbf8 0%, #f8f1ea 35%, #f3ebe4 70%, #efe6dc 100%);
     }
-    /* Footer — light dot grid on cream (editorial, not flat black) */
+    /* Footer — one light dot layer, airy grid (less visual noise) */
     .footer-polka {
       background-color: #faf7f3;
       background-image: radial-gradient(
         circle at center,
-        rgba(95, 56, 40, 0.28) 1.25px,
+        rgba(95, 56, 40, 0.32) 1.25px,
         transparent 2px
       );
       background-size: 40px 40px;
+    }
+    /* Solid panel: no dots bleeding through = calmer */
+    .footer-polka-text {
+      background: #fbf8f4;
+      border-radius: 1.25rem;
+      padding: 2rem 2.25rem;
+      box-shadow: 0 1px 3px rgba(59, 35, 20, 0.05);
     }
     /* Beach → cream handoff (no hard cut above footer) */
     .final-cta-bottom-fade {
@@ -536,16 +543,16 @@
 
   <!-- Navigation — warm frosted bar (matches editorial palette on hero + body) -->
   <nav id="site-nav" class="fixed w-full top-0 z-50 transition-colors duration-300">
-    <div class="max-w-6xl mx-auto px-5 sm:px-6 relative flex lg:grid lg:grid-cols-[1fr_auto_1fr] items-center h-16 sm:h-[4.25rem]">
-      <div class="hidden lg:flex items-center gap-4 lg:gap-6 justify-self-start flex-wrap">
+    <div class="max-w-6xl mx-auto px-5 sm:px-6 relative flex md:grid md:grid-cols-[1fr_auto_1fr] items-center h-16 sm:h-[4.25rem]">
+      <div class="hidden md:flex items-center gap-4 lg:gap-6 justify-self-start flex-wrap">
         <a href="#why-it-exists" class="nav-link text-sm font-medium transition-colors">Why it exists</a>
         <a href="#the-experience" class="nav-link text-sm font-medium transition-colors">The experience</a>
         <a href="#how-it-works" class="nav-link text-sm font-medium transition-colors">How it works</a>
         <a href="#faq" class="nav-link text-sm font-medium transition-colors">FAQ</a>
         <a href="#waitlist" class="nav-link text-sm font-medium transition-colors">Waitlist</a>
       </div>
-      <a href="#" class="nav-logo font-display text-xl sm:text-2xl tracking-tight italic font-semibold absolute left-1/2 -translate-x-1/2 lg:static lg:translate-x-0 lg:justify-self-center transition-colors">Dilly</a>
-      <div class="ml-auto lg:justify-self-end">
+      <a href="#" class="nav-logo font-display text-xl sm:text-2xl tracking-tight italic font-semibold absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0 md:justify-self-center transition-colors">Dilly</a>
+      <div class="ml-auto justify-self-end">
         <a href="#waitlist" class="nav-cta inline-flex items-center justify-center rounded-full text-[0.65rem] sm:text-sm font-semibold px-3 py-1.5 sm:px-5 sm:py-2.5 transition-colors">Join waitlist</a>
       </div>
     </div>
@@ -581,9 +588,8 @@
           The pause between <br class="sm:hidden">
           <span class="italic text-[#3B2314] sm:text-white">wanting</span> and buying.
         </h1>
-        <p class="text-[0.8125rem] sm:text-lg font-light text-[#3B2314]/88 sm:text-white/95 leading-[1.72] sm:leading-relaxed mb-8 sm:mb-10 max-w-[16.5rem] sm:max-w-xl mx-auto sm:[text-shadow:0_1px_16px_rgba(0,0,0,0.35)]">
-          <span class="sm:hidden">Adds a short pause before checkout so you can decide on purpose.</span>
-          <span class="hidden sm:inline">When you try to add something to your cart, Dilly asks you to wait a few seconds. You can still buy it — you just get a moment to decide on purpose.</span>
+        <p class="text-[0.8125rem] sm:text-lg font-light text-[#3B2314]/88 sm:text-white/95 leading-[1.65] sm:leading-relaxed mb-8 sm:mb-10 max-w-xl mx-auto sm:[text-shadow:0_1px_16px_rgba(0,0,0,0.35)]">
+          When you try to add something to your cart, Dilly asks you to wait a few seconds. You can still buy it — you just get a moment to decide on purpose.
         </p>
         <div class="flex flex-col sm:flex-row items-center justify-center gap-5 sm:gap-7">
           <a href="#waitlist" class="inline-flex w-fit max-w-[11rem] mx-auto sm:mx-0 sm:max-w-none items-center justify-center gap-1 shrink-0 bg-[#3B2314] text-[#fbf7f2] px-4 py-2 sm:bg-white sm:text-[#0f1419] sm:px-9 sm:py-3.5 rounded-full text-xs sm:text-sm font-semibold hover:bg-[#2c241e] sm:hover:bg-[#f2ece4] transition-colors shadow-[0_10px_24px_-6px_rgba(59,35,20,0.35)] sm:shadow-[0_12px_32px_-8px_rgba(0,0,0,0.55)]">
@@ -602,25 +608,24 @@
   <section id="why-it-exists" class="py-20 sm:py-32 lg:py-40 relative bg-white/60 border-y border-[#3B2314]/[0.06] scroll-mt-24">
     <div class="max-w-6xl mx-auto px-4 sm:px-6">
       <p class="editorial-kicker text-center mb-4 sm:mb-4">Why it exists</p>
-      <h2 class="font-display text-[1.1875rem] leading-[1.35] sm:text-4xl sm:leading-tight md:text-5xl tracking-tight mb-10 sm:mb-20 text-center font-medium text-[#3B2314] max-w-[19rem] sm:max-w-3xl mx-auto">
+      <h2 class="font-display text-[1.1875rem] leading-[1.35] sm:text-4xl sm:leading-tight md:text-5xl tracking-tight mb-12 sm:mb-20 text-center font-medium text-[#3B2314] max-w-[19rem] sm:max-w-3xl mx-auto">
         Shopping sites are built to go fast.
       </h2>
-      <div class="grid md:grid-cols-2 gap-12 sm:gap-12 md:gap-20 items-start">
-        <div class="space-y-7 sm:space-y-6 order-2 md:order-1 max-w-[19rem] sm:max-w-none mx-auto md:mx-0">
-          <p class="text-[#3B2314]/78 text-[0.8125rem] sm:text-xl font-light leading-[1.72] sm:leading-relaxed">
+      <div class="grid md:grid-cols-2 gap-10 sm:gap-12 md:gap-20 items-start">
+        <div class="space-y-6 sm:space-y-6 order-2 md:order-1">
+          <p class="text-[#3B2314]/80 text-[0.875rem] sm:text-xl font-light leading-[1.68] sm:leading-relaxed">
             Timers, urgency copy, and one-click checkout are there to shorten the gap between impulse and order. That can work against you when you&rsquo;re tired or distracted.
           </p>
-          <p class="text-[#3B2314]/78 text-[0.8125rem] sm:text-xl font-light leading-[1.72] sm:leading-relaxed">
+          <p class="text-[#3B2314]/80 text-[0.875rem] sm:text-xl font-light leading-[1.68] sm:leading-relaxed">
             Dilly doesn&rsquo;t block purchases. It adds a short pause at the moment you try to add to cart, so you can choose with a clear head.
           </p>
         </div>
-        <div class="order-1 md:order-2 rounded-2xl p-5 sm:p-10 bg-gradient-to-br from-white/90 to-[#ebe3d6]/80 border border-[#3B2314]/[0.08] shadow-lift-sm max-w-[19rem] sm:max-w-none mx-auto md:mx-0 w-full">
+        <div class="order-1 md:order-2 rounded-2xl p-5 sm:p-10 bg-gradient-to-br from-white/90 to-[#ebe3d6]/80 border border-[#3B2314]/[0.08] shadow-lift-sm">
           <h3 class="font-display text-[1.125rem] sm:text-3xl tracking-tight mb-3 sm:mb-5 text-[#3B2314] font-medium leading-snug">
             Take a pause.
           </h3>
-          <p class="text-[#3B2314]/78 text-[0.8125rem] sm:text-lg font-light leading-[1.72] sm:leading-relaxed">
-            <span class="sm:hidden">Wait out the timer, add the item, or tap &ldquo;not today.&rdquo; Stats stay on your device if you turn them on.</span>
-            <span class="hidden sm:inline">You stay in control: wait out the timer and add the item, or tap &ldquo;not today.&rdquo; Optional stats are just for you — if you enable them, they stay in your browser.</span>
+          <p class="text-[#3B2314]/80 text-[0.875rem] sm:text-lg font-light leading-[1.68] sm:leading-relaxed">
+            You stay in control: wait out the timer and add the item, or tap &ldquo;not today.&rdquo; Optional stats are just for you — if you enable them, they stay in your browser.
           </p>
         </div>
       </div>
@@ -635,9 +640,8 @@
         <h2 class="font-display text-[1.1875rem] leading-[1.35] sm:text-4xl md:text-5xl sm:leading-tight tracking-tight font-medium text-[#3B2314] max-w-[18rem] sm:max-w-none mx-auto">
           What you&rsquo;ll see
         </h2>
-        <p class="mt-5 sm:mt-5 text-[#3B2314]/65 max-w-[17rem] sm:max-w-2xl mx-auto font-light text-[0.75rem] sm:text-lg leading-relaxed">
-          <span class="sm:hidden">Pause overlay, sidebar, and settings &mdash; captured on a real shop.</span>
-          <span class="hidden sm:inline">Real captures on Princess Polly (online fashion retailer) &mdash; pause overlay, sidebar, and settings.</span>
+        <p class="mt-5 sm:mt-5 text-[#3B2314]/70 max-w-2xl mx-auto font-light text-[0.8125rem] sm:text-lg leading-relaxed">
+          Real captures on Princess Polly (online fashion retailer) &mdash; pause overlay, sidebar, and settings.
         </p>
       </div>
 
@@ -743,10 +747,7 @@
         <h2 class="font-display text-[1.1875rem] leading-[1.35] sm:text-4xl md:text-5xl sm:leading-tight tracking-tight mb-5 sm:mb-6 font-medium text-[#3B2314]">
           How it works
         </h2>
-        <p class="text-[0.75rem] sm:text-lg font-light text-[#3B2314]/65 max-w-[17rem] sm:max-w-xl mx-auto leading-relaxed">
-          <span class="sm:hidden">Runs when you add to cart or take a similar checkout step.</span>
-          <span class="hidden sm:inline">Dilly runs only when you try to add something to your cart (or a similar checkout step).</span>
-        </p>
+        <p class="text-[0.8125rem] sm:text-lg font-light text-[#3B2314]/70 max-w-xl mx-auto leading-relaxed">Dilly runs only when you try to add something to your cart (or a similar checkout step).</p>
       </div>
 
       <div class="grid md:grid-cols-3 gap-10 sm:gap-12 md:gap-10 lg:gap-14 max-w-5xl mx-auto">
@@ -765,9 +766,8 @@
           <h3 class="font-display text-[1.125rem] sm:text-[1.55rem] tracking-tight text-[#3B2314] font-medium leading-snug mb-2 sm:mb-3">
             Short pause
           </h3>
-          <p class="text-[#3B2314]/70 text-[0.8125rem] sm:text-[0.9375rem] leading-[1.7] sm:leading-relaxed font-light">
-            <span class="sm:hidden">An overlay with your timer (e.g. 10s&mdash;or 30, 60s+ in settings).</span>
-            <span class="hidden sm:inline">A small overlay appears with a timer you set (often starting around 10 seconds; you can choose 30, 60, or more in settings).</span>
+          <p class="text-[#3B2314]/72 text-[0.8125rem] sm:text-[0.9375rem] leading-relaxed font-light">
+            A small overlay appears with a timer you set (often starting around 10 seconds; you can choose 30, 60, or more in settings).
           </p>
         </article>
 
@@ -791,9 +791,8 @@
       <h2 class="font-display text-[1.1875rem] leading-[1.35] sm:text-4xl md:text-[2.75rem] sm:leading-tight tracking-tight text-center font-medium text-[#3B2314] mb-4 sm:mb-4">
         Common questions
       </h2>
-      <p class="text-center text-[0.6875rem] sm:text-base text-[#3B2314]/55 sm:text-[#3B2314]/65 font-light mb-8 sm:mb-12 max-w-[14rem] sm:max-w-lg mx-auto leading-relaxed">
-        <span class="sm:hidden">Short answers, no fluff.</span>
-        <span class="hidden sm:inline">Quick answers about how Dilly fits into your shopping.</span>
+      <p class="text-center text-[0.75rem] sm:text-base text-[#3B2314]/65 font-light mb-10 sm:mb-12 max-w-lg mx-auto leading-relaxed">
+        Quick answers about how Dilly fits into your shopping.
       </p>
       <div class="dilly-faq space-y-3">
         <details class="group rounded-2xl border border-[#3B2314]/[0.1] bg-[#fbf7f2]/60 px-5 py-4 transition-shadow open:shadow-lift-sm">
@@ -892,9 +891,8 @@
       <h2 class="font-display text-[1.1875rem] leading-[1.35] sm:text-5xl md:text-6xl tracking-tight mb-6 sm:mb-6 font-medium text-[#3B2314] sm:leading-[1.08]">
         Give yourself <br class="hidden sm:block"> a moment.
       </h2>
-      <p class="text-[0.75rem] sm:text-lg font-light text-[#3B2314]/80 sm:text-[#3B2314]/85 mb-10 sm:mb-10 max-w-[15rem] sm:max-w-md mx-auto leading-relaxed">
-        <span class="sm:hidden">Coming to the Chrome Web Store. We&rsquo;ll email you once.</span>
-        <span class="hidden sm:inline">Launching soon on the Chrome Web Store. Join the waitlist and we&rsquo;ll email you once.</span>
+      <p class="text-[0.8125rem] sm:text-lg font-light text-[#3B2314]/85 mb-10 sm:mb-10 max-w-[17rem] sm:max-w-md mx-auto leading-relaxed">
+        Launching soon on the Chrome Web Store. Join the waitlist and we&rsquo;ll email you once.
       </p>
       <a href="#waitlist" class="inline-flex w-fit max-w-[8.75rem] mx-auto sm:mx-0 sm:max-w-none items-center justify-center gap-1 bg-[#3B2314] text-[#fbf7f2] px-3 py-1.5 sm:px-9 sm:py-3.5 rounded-full text-[0.625rem] sm:text-base font-medium hover:bg-[#2C1A0E] transition-colors shadow-[0_12px_36px_-10px_rgba(59,35,20,0.3)]">
         Join the waitlist
@@ -902,67 +900,61 @@
     </div>
   </section>
 
-  <footer class="footer-polka relative text-[#3B2314] antialiased px-5 sm:px-8 pt-14 sm:pt-20 pb-10 sm:pb-12">
-    <div class="max-w-6xl mx-auto">
-      <div class="grid gap-12 sm:gap-10 md:grid-cols-12 md:gap-8 pb-12 border-b border-[#3B2314]/[0.08]">
-        <div class="md:col-span-4">
-          <div class="font-display text-2xl sm:text-[1.65rem] tracking-tight italic font-semibold text-[#3B2314]">Dilly</div>
-          <p class="mt-3 text-sm text-[#3B2314]/72 font-light leading-relaxed max-w-[16rem]">
-            Mindful shopping for Chrome. A short pause before you buy &mdash; on purpose.
-          </p>
-        </div>
+  <footer class="footer-polka relative px-5 sm:px-8 pt-12 sm:pt-16 pb-14 sm:pb-16">
+    <div class="footer-polka-text max-w-md mx-auto flex flex-col items-center text-center gap-7">
+      <div>
+        <div class="font-display text-xl tracking-tight italic text-[#3B2314] font-semibold mb-1">Dilly</div>
+        <p class="text-[11px] font-light text-[#3B2314]/62 tracking-[0.2em] uppercase">Mindful shopping for Chrome</p>
+      </div>
 
-        <div id="waitlist" class="scroll-mt-24 md:col-span-5">
-          <p class="text-[0.65rem] font-medium uppercase tracking-[0.22em] text-[#a86b5c] mb-2">Waitlist</p>
-          <h3 class="font-display text-lg sm:text-xl text-[#3B2314] font-medium mb-2 leading-snug">
-            Get notified at launch
-          </h3>
-          <p class="text-sm text-[#3B2314]/65 font-light leading-relaxed mb-5">
-            One email when Dilly hits the Chrome Web Store. No spam.
-          </p>
-          <form
-            class="flex flex-col sm:flex-row gap-2 sm:items-stretch sm:gap-2"
-            action="https://formspree.io/f/xpqojebe"
-            method="POST"
-            accept-charset="UTF-8"
+      <!-- Waitlist: Basic HTML POST to Formspree (success = Formspree thank-you page, or set redirect in Formspree dashboard) -->
+      <div id="waitlist" class="scroll-mt-24 w-full max-w-[min(100%,19rem)] sm:max-w-md mx-auto rounded-2xl border border-[#3B2314]/[0.1] bg-[#fbf7f2]/85 px-4 py-6 sm:px-6 sm:py-7 text-left">
+        <p class="editorial-kicker text-center mb-2">Waitlist</p>
+        <h3 class="font-display text-base sm:text-2xl text-[#3B2314] font-medium text-center mb-2 leading-snug">
+          Get notified at launch
+        </h3>
+        <p class="text-[0.75rem] sm:text-sm text-[#3B2314]/68 font-light leading-relaxed text-center mb-5">
+          Leave your email and we&rsquo;ll send one message when Dilly is on the Chrome Web Store.
+        </p>
+        <form
+          class="flex flex-col sm:flex-row gap-3 sm:gap-2 sm:items-stretch items-stretch"
+          action="https://formspree.io/f/xpqojebe"
+          method="POST"
+          accept-charset="UTF-8"
+        >
+          <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" class="sr-only" aria-hidden="true" />
+          <label for="waitlist-email" class="sr-only">Email</label>
+          <input
+            id="waitlist-email"
+            type="email"
+            name="email"
+            required
+            autocomplete="email"
+            inputmode="email"
+            placeholder="you@email.com"
+            class="min-w-0 flex-1 rounded-full border border-[#3B2314]/[0.14] bg-white px-3 py-2 text-xs sm:text-sm text-[#3B2314] placeholder:text-[#3B2314]/38 focus:outline-none focus:ring-2 focus:ring-[#a86b5c]/45"
+          />
+          <input type="hidden" name="_subject" value="Dilly waitlist" />
+          <button
+            type="submit"
+            class="shrink-0 rounded-full bg-[#3B2314] px-3 py-1.5 text-[0.625rem] sm:text-sm font-medium text-[#fbf7f2] transition-colors hover:bg-[#2C1A0E] sm:px-6 sm:py-2.5 w-fit max-w-[7.5rem] mx-auto sm:mx-0 sm:max-w-none self-center sm:self-auto"
           >
-            <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" class="sr-only" aria-hidden="true" />
-            <label for="waitlist-email" class="sr-only">Email</label>
-            <input
-              id="waitlist-email"
-              type="email"
-              name="email"
-              required
-              autocomplete="email"
-              inputmode="email"
-              placeholder="Email address"
-              class="min-w-0 flex-1 rounded-full border border-[#3B2314]/[0.14] bg-white px-4 py-2.5 text-sm text-[#3B2314] placeholder:text-[#3B2314]/38 focus:outline-none focus:ring-2 focus:ring-[#a86b5c]/35"
-            />
-            <input type="hidden" name="_subject" value="Dilly waitlist" />
-            <button
-              type="submit"
-              class="shrink-0 rounded-full bg-[#3B2314] px-5 py-2.5 text-sm font-semibold text-[#fbf7f2] transition-colors hover:bg-[#2C1A0E] sm:px-6"
-            >
-              Join
-            </button>
-          </form>
-        </div>
-
-        <nav class="md:col-span-3 flex flex-col sm:flex-row md:flex-col gap-4 sm:gap-8 md:gap-3 md:items-end md:text-right" aria-label="Footer links">
-          <a href="#coming-soon" class="text-sm font-medium text-[#3B2314]/75 hover:text-[#3B2314] transition-colors">Privacy</a>
-          <a href="#coming-soon" class="text-sm font-medium text-[#3B2314]/75 hover:text-[#3B2314] transition-colors">Chrome Web Store</a>
-          <a href="mailto:shrikha56@gmail.com" class="text-sm font-medium text-[#3B2314]/75 hover:text-[#3B2314] transition-colors">Contact</a>
-        </nav>
-      </div>
-
-      <div class="pt-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <p class="text-xs text-[#3B2314]/50 order-2 sm:order-1 font-light">
-          &copy; 2026 Dilly. All rights reserved.
-        </p>
-        <p id="coming-soon" class="scroll-mt-24 text-xs text-[#3B2314]/50 order-1 sm:order-2 sm:text-right max-w-md sm:max-w-none font-light leading-relaxed">
-          Privacy policy and store listing &mdash; coming soon.
+            Join waitlist
+          </button>
+        </form>
+        <p class="mt-3 text-center text-[11px] font-light text-[#3B2314]/48">
+          No spam. Unsubscribe anytime. We don&rsquo;t sell your email.
         </p>
       </div>
+
+      <nav class="flex flex-wrap justify-center items-center gap-x-8 gap-y-3" aria-label="Footer">
+        <a href="#coming-soon" class="text-xs font-medium text-[#3B2314]/82 hover:text-[#3B2314] transition-colors">Privacy Policy</a>
+        <a href="#coming-soon" class="text-xs font-medium text-[#3B2314]/82 hover:text-[#3B2314] transition-colors">Chrome Web Store</a>
+        <a href="mailto:shrikha56@gmail.com" class="text-xs font-medium text-[#3B2314]/82 hover:text-[#3B2314] transition-colors">Contact</a>
+      </nav>
+      <p id="coming-soon" class="scroll-mt-24 max-w-xs mx-auto pt-1 text-center text-[11px] font-light leading-relaxed text-[#3B2314]/55">
+        Privacy policy and Chrome Web Store listing &mdash; coming soon.
+      </p>
     </div>
   </footer>
 
