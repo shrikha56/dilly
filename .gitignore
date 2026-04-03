@@ -6,3 +6,4 @@ create-icons.cjs
 icons/tight.png
 icons/centered.png
 .DS_Store
+.vercel

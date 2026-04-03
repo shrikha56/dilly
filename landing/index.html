@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+  <html lang="en" class="motion-safe:scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dilly | Coming soon · Mindful shopping for Chrome</title>
+  <meta name="description" content="Dilly — mindful shopping for Chrome. Coming soon. Join the waitlist for one email at launch. Free, no account, privacy-first." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%235c3d2e'/%3E%3Ctext x='16' y='22' text-anchor='middle' font-family='Georgia%2Cserif' font-size='17' fill='%23fbf6f0'%3ED%3C/text%3E%3C/svg%3E" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=Instrument+Serif:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            /* Tertiary — calm sage alongside chocolate + terracotta */
+            sage: {
+              50: '#f5f8f4',
+              100: '#e8ede6',
+              200: '#d0d9cd',
+              300: '#a8b4a4',
+              400: '#889882',
+              500: '#6d8069',
+              600: '#566652',
+              700: '#455242',
+              800: '#3a4437',
+              900: '#323a30',
+            },
+          },
+          fontFamily: {
+            serif: ['"Cormorant Garamond"', 'Georgia', 'serif'],
+            display: ['"Instrument Serif"', 'Georgia', 'serif'],
+            sans: ['"DM Sans"', 'system-ui', 'sans-serif'],
+          },
+          boxShadow: {
+            'lift': '0 1px 0 rgba(255,255,255,0.85) inset, 0 28px 56px -18px rgba(59, 35, 20, 0.12), 0 8px 24px -12px rgba(59, 35, 20, 0.06)',
+            'lift-sm': '0 1px 0 rgba(255,255,255,0.7) inset, 0 12px 32px -8px rgba(59, 35, 20, 0.08)',
+            'nav': '0 1px 0 rgba(255,255,255,0.6), 0 12px 40px -16px rgba(59, 35, 20, 0.08)',
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    /* Warm editorial canvas — Dilly browns + cream */
+    .bg-atmosphere {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse 120% 70% at 50% -15%, rgba(201, 137, 122, 0.12), transparent 55%),
+        radial-gradient(ellipse 80% 50% at 95% 35%, rgba(59, 35, 20, 0.04), transparent 50%),
+        radial-gradient(ellipse 70% 45% at 5% 75%, rgba(201, 137, 122, 0.06), transparent 48%),
+        radial-gradient(ellipse 100% 60% at 50% 100%, rgba(234, 225, 211, 0.4), transparent 55%),
+        linear-gradient(168deg, #fdfbf8 0%, #f8f1ea 35%, #f3ebe4 70%, #efe6dc 100%);
+    }
+    /* Footer — one light dot layer, airy grid (less visual noise) */
+    .footer-polka {
+      background-color: #faf7f3;
+      background-image: radial-gradient(
+        circle at center,
+        rgba(95, 56, 40, 0.32) 1.25px,
+        transparent 2px
+      );
+      background-size: 40px 40px;
+    }
+    /* Solid panel: no dots bleeding through = calmer */
+    .footer-polka-text {
+      background: #fbf8f4;
+      border-radius: 1.25rem;
+      padding: 2rem 2.25rem;
+      box-shadow: 0 1px 3px rgba(59, 35, 20, 0.05);
+    }
+    /* Beach → cream handoff (no hard cut above footer) */
+    .final-cta-bottom-fade {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: min(32vh, 14rem);
+      z-index: 3;
+      pointer-events: none;
+      background: linear-gradient(
+        to bottom,
+        rgba(249, 246, 241, 0) 0%,
+        rgba(249, 246, 241, 0.25) 42%,
+        rgba(249, 246, 241, 0.72) 78%,
+        #f9f6f1 100%
+      );
+    }
+    .editorial-kicker {
+      font-size: 0.6875rem;
+      font-weight: 500;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: rgba(168, 107, 92, 0.88);
+    }
+    .editorial-link {
+      font-size: 0.875rem;
+      font-weight: 400;
+      color: rgba(59, 35, 20, 0.72);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(59, 35, 20, 0.18);
+      padding-bottom: 0.1rem;
+      transition: color 0.2s ease, border-color 0.2s ease;
+    }
+    .editorial-link:hover {
+      color: #8a5a4a;
+      border-color: rgba(168, 107, 92, 0.45);
+    }
+    /* Matches Dilly extension popup / overlay */
+    .dilly-ui-surface {
+      background: #fbf6f0;
+      border: 1px solid rgba(92, 61, 46, 0.09);
+      box-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.9) inset,
+        0 32px 80px -20px rgba(44, 24, 16, 0.12),
+        0 8px 24px -12px rgba(44, 24, 16, 0.08);
+    }
+    .dilly-progress-track {
+      height: 3px;
+      border-radius: 999px;
+      background: rgba(92, 61, 46, 0.08);
+      overflow: hidden;
+    }
+    .dilly-progress-fill {
+      height: 100%;
+      width: 55%;
+      background: #5c3d2e;
+      border-radius: 999px;
+    }
+    /* Native assets: 1024w = 1×. For sharp Retina, @2x must be real 2048px captures — not upscaled from 1024 or they stay soft. */
+    .dilly-shot-stack {
+      max-width: 1024px;
+      width: 100%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    /* Screenshots: no white mat — shadow + radius on the image block only */
+    .dilly-shot-card {
+      background: transparent;
+      border: none;
+      border-radius: 0;
+      padding: 0;
+      box-shadow: none;
+    }
+    .dilly-shot-media {
+      border-radius: 0.875rem;
+      overflow: hidden;
+      background: rgba(44, 24, 16, 0.05);
+      line-height: 0;
+      box-shadow: none;
+      border: 1px solid rgba(59, 35, 20, 0.07);
+      transform: translateZ(0);
+      isolation: isolate;
+    }
+    @media (min-width: 640px) {
+      .dilly-shot-media {
+        border-radius: 1rem;
+      }
+    }
+    .hero-shot .dilly-shot-media {
+      box-shadow: none;
+    }
+    /* Square editorial hero — 1:1; width set by grid column on large screens */
+    .hero-editorial-frame {
+      border-radius: 1rem;
+      overflow: hidden;
+      background: rgba(44, 24, 16, 0.06);
+      line-height: 0;
+      width: 100%;
+      max-width: min(100%, 26rem);
+      margin-left: auto;
+      margin-right: auto;
+      box-shadow:
+        0 4px 6px -2px rgba(44, 24, 16, 0.1),
+        0 20px 40px -14px rgba(44, 24, 16, 0.16);
+      border: 1px solid rgba(59, 35, 20, 0.08);
+      transform: translateZ(0);
+      isolation: isolate;
+    }
+    @media (min-width: 1024px) {
+      .hero-editorial-frame {
+        margin-left: 0;
+        margin-right: 0;
+        max-width: 100%;
+      }
+    }
+    .hero-editorial-frame img {
+      display: block;
+      width: 100%;
+      height: auto;
+      transform: translateZ(0);
+    }
+    /* Soft editorial ring + lift — hero image only */
+    .hero-editorial-ring {
+      border-radius: 1.125rem;
+      padding: 1px;
+      background: linear-gradient(
+        145deg,
+        rgba(255, 255, 255, 0.65) 0%,
+        rgba(201, 137, 122, 0.22) 42%,
+        rgba(59, 35, 20, 0.12) 100%
+      );
+      box-shadow:
+        0 0 0 1px rgba(59, 35, 20, 0.06),
+        0 24px 48px -16px rgba(59, 35, 20, 0.14),
+        0 8px 20px -10px rgba(59, 35, 20, 0.08);
+    }
+    @media (min-width: 1024px) {
+      .hero-editorial-ring {
+        border-radius: 1.25rem;
+      }
+    }
+    .hero-editorial-ring .hero-editorial-frame {
+      border: none;
+      box-shadow: none;
+      border-radius: 1.05rem;
+    }
+    @media (min-width: 1024px) {
+      .hero-editorial-ring .hero-editorial-frame {
+        border-radius: 1.15rem;
+      }
+    }
+    .dilly-shot-media img {
+      display: block;
+      width: 100%;
+      max-width: 1024px;
+      height: auto;
+      margin: 0 auto;
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+      transform: translateZ(0);
+    }
+    .dilly-shot-caption {
+      margin-top: 1.25rem;
+      padding: 0 0.25rem 0.25rem;
+      text-align: center;
+    }
+    @media (min-width: 640px) {
+      .dilly-shot-caption {
+        margin-top: 1.5rem;
+        padding: 0 0.5rem 0.25rem;
+      }
+    }
+    /* Sage tertiary — explicit hex so it shows without Tailwind CDN color build */
+    .dilly-sage-badge {
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid rgba(59, 35, 20, 0.1);
+      color: rgba(59, 35, 20, 0.85);
+    }
+    .dilly-bg-experience {
+      background: linear-gradient(
+        180deg,
+        rgba(235, 227, 214, 0.35) 0%,
+        rgba(245, 239, 232, 0.5) 50%,
+        rgba(235, 227, 214, 0.28) 100%
+      );
+    }
+    .dilly-shot-step {
+      font-family: "DM Sans", system-ui, sans-serif;
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: rgba(138, 90, 74, 0.92);
+      margin-bottom: 0.35rem;
+    }
+    .dilly-shot-title {
+      display: block;
+      font-family: "Instrument Serif", Georgia, serif;
+      font-size: 1.35rem;
+      font-weight: 400;
+      color: #2c1810;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      margin: 0;
+    }
+    .dilly-shot-desc {
+      margin: 0.5rem auto 0;
+      max-width: 28rem;
+      font-size: 0.875rem;
+      line-height: 1.55;
+      color: rgba(44, 24, 16, 0.62);
+      font-weight: 300;
+    }
+    /* How it works — editorial columns, not icon cards */
+    .how-flow-step {
+      border-left: 1px solid rgba(201, 137, 122, 0.5);
+      padding: 0.15rem 0 0.15rem 1.35rem;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto !important;
+      }
+      .dilly-shot-slideshow-track {
+        transition: none !important;
+      }
+    }
+    /* Centered slideshow — one slide at a time, no horizontal scroll peek */
+    .dilly-shot-carousel-wrap {
+      position: relative;
+      max-width: 54rem;
+      width: 100%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .dilly-shot-slideshow-viewport {
+      overflow: hidden;
+      width: 100%;
+      padding: 0.25rem 0 0;
+    }
+    .dilly-shot-slideshow-track {
+      display: flex;
+      width: 300%;
+      transform: translateX(0);
+      transition: transform 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+      will-change: transform;
+    }
+    .dilly-shot-slideshow-track .dilly-shot {
+      flex: 0 0 33.333333%;
+      width: 33.333333%;
+      min-width: 0;
+      box-sizing: border-box;
+      padding: 0 0.25rem;
+    }
+    @media (min-width: 640px) {
+      .dilly-shot-slideshow-track .dilly-shot {
+        padding: 0 0.5rem;
+      }
+    }
+    .dilly-shot-carousel-nav {
+      display: flex;
+      justify-content: center;
+      gap: 0.45rem;
+      margin-top: 0.75rem;
+    }
+    .dilly-shot-carousel-dot {
+      width: 0.4rem;
+      height: 0.4rem;
+      border-radius: 999px;
+      border: none;
+      padding: 0;
+      background: rgba(59, 35, 20, 0.2);
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+    .dilly-shot-carousel-dot[aria-current="true"] {
+      background: rgba(59, 35, 20, 0.55);
+      transform: scale(1.2);
+    }
+    .dilly-shot-carousel-dot:focus-visible {
+      outline: 2px solid rgba(138, 90, 74, 0.65);
+      outline-offset: 3px;
+    }
+    #floating-cta.floating-cta--off {
+      opacity: 0;
+      pointer-events: none;
+      visibility: hidden;
+    }
+    #floating-cta {
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+    .dilly-faq details summary {
+      list-style: none;
+    }
+    .dilly-faq details summary::-webkit-details-marker {
+      display: none;
+    }
+    /* Warm editorial nav — frosted cream over hero + page (no black bar) */
+    #site-nav {
+      background: rgba(253, 248, 242, 0.82);
+      -webkit-backdrop-filter: blur(16px) saturate(1.15);
+      backdrop-filter: blur(16px) saturate(1.15);
+      border-bottom: 1px solid rgba(59, 35, 20, 0.09);
+      box-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.75) inset,
+        0 10px 36px -18px rgba(59, 35, 20, 0.1);
+    }
+    #site-nav .nav-link {
+      color: rgba(59, 35, 20, 0.78);
+    }
+    #site-nav .nav-link:hover {
+      color: #8a5a4a;
+    }
+    #site-nav .nav-logo {
+      color: #3b2314;
+    }
+    #site-nav .nav-cta {
+      background: rgba(235, 227, 214, 0.95);
+      color: #3b2314;
+      border: 1px solid rgba(59, 35, 20, 0.1);
+    }
+    #site-nav .nav-cta:hover {
+      background: #e8dfd2;
+    }
+    /* Full-bleed photo — visible; scrim keeps type legible (no heavy blur / no “black hole”) */
+    .hero-bg-photo {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 28%;
+      transform: scale(1.02);
+      /* Barely-there warmth */
+      filter: saturate(1.01) hue-rotate(1.5deg) contrast(1.01) brightness(1.01);
+    }
+    .hero-dark-vignette {
+      position: absolute;
+      inset: 0;
+      /* Minimal gold tint; mostly neutral shadow for type */
+      background:
+        linear-gradient(
+          180deg,
+          rgba(255, 220, 190, 0.045) 0%,
+          rgba(230, 210, 185, 0.025) 38%,
+          rgba(40, 38, 38, 0.4) 100%
+        ),
+        radial-gradient(ellipse 100% 72% at 50% 32%, rgba(255, 205, 160, 0.035) 0%, rgba(58, 52, 48, 0.08) 62%);
+    }
+    .hero-dark-sparkles {
+      position: absolute;
+      inset: 0;
+      opacity: 0.08;
+      background-image:
+        radial-gradient(1px 1px at 12% 18%, rgba(255, 255, 255, 0.95), transparent),
+        radial-gradient(1px 1px at 88% 22%, rgba(255, 255, 255, 0.75), transparent),
+        radial-gradient(1px 1px at 35% 72%, rgba(255, 255, 255, 0.65), transparent),
+        radial-gradient(1px 1px at 67% 85%, rgba(255, 255, 255, 0.85), transparent),
+        radial-gradient(1px 1px at 50% 40%, rgba(255, 255, 255, 0.4), transparent),
+        radial-gradient(1px 1px at 22% 55%, rgba(255, 255, 255, 0.55), transparent),
+        radial-gradient(1px 1px at 78% 48%, rgba(255, 255, 255, 0.5), transparent);
+      pointer-events: none;
+    }
+    .editorial-link-hero-dark {
+      font-size: 0.875rem;
+      font-weight: 400;
+      color: rgba(255, 255, 255, 0.78);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.28);
+      padding-bottom: 0.1rem;
+      transition: color 0.2s ease, border-color 0.2s ease;
+    }
+    .editorial-link-hero-dark:hover {
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.55);
+    }
+    /* Final CTA — full-bleed beach / moment image + warm scrim for brown type */
+    .final-cta-photo {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 42%;
+    }
+    .final-cta-grain {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.34;
+      mix-blend-mode: overlay;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='256' height='256'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 256px 256px;
+    }
+    .final-cta-scrim {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      background: linear-gradient(
+        180deg,
+        rgba(253, 248, 242, 0.52) 0%,
+        rgba(248, 241, 234, 0.38) 40%,
+        rgba(245, 239, 232, 0.62) 100%
+      );
+    }
+  </style>
+</head>
+<body class="bg-[#f8f1ea] text-[#3B2314] font-sans antialiased selection:bg-[#C9897A]/25 selection:text-[#3B2314] pb-24">
+
+  <div class="bg-atmosphere" aria-hidden="true"></div>
+
+  <!-- Navigation — warm frosted bar (matches editorial palette on hero + body) -->
+  <nav id="site-nav" class="fixed w-full top-0 z-50 transition-colors duration-300">
+    <div class="max-w-6xl mx-auto px-5 sm:px-6 relative flex md:grid md:grid-cols-[1fr_auto_1fr] items-center h-16 sm:h-[4.25rem]">
+      <div class="hidden md:flex items-center gap-4 lg:gap-6 justify-self-start flex-wrap">
+        <a href="#why-it-exists" class="nav-link text-sm font-medium transition-colors">Why it exists</a>
+        <a href="#the-experience" class="nav-link text-sm font-medium transition-colors">The experience</a>
+        <a href="#how-it-works" class="nav-link text-sm font-medium transition-colors">How it works</a>
+        <a href="#faq" class="nav-link text-sm font-medium transition-colors">FAQ</a>
+        <a href="#waitlist" class="nav-link text-sm font-medium transition-colors">Waitlist</a>
+      </div>
+      <a href="#" class="nav-logo font-display text-xl sm:text-2xl tracking-tight italic font-semibold absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0 md:justify-self-center transition-colors">Dilly</a>
+      <div class="ml-auto justify-self-end">
+        <a href="#waitlist" class="nav-cta inline-flex items-center justify-center rounded-full text-xs sm:text-sm font-semibold px-4 py-2 sm:px-5 sm:py-2.5 transition-colors">Join waitlist</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero — dark editorial: same header asset as full-bleed blurred bg (Phia-style) -->
+  <section id="hero-dark" class="relative isolate min-h-[min(100svh,52rem)] flex flex-col border-b border-white/[0.06] overflow-hidden">
+    <div class="absolute inset-0 z-0 overflow-hidden bg-[#403c38]" aria-hidden="true">
+      <img
+        class="hero-bg-photo"
+        src="images/hero-editorial.png"
+        srcset="
+          images/hero-editorial.png 1024w,
+          images/hero-editorial@2x.png 2048w
+        "
+        sizes="100vw"
+        alt="Woman in warm sunlight with sunglasses, relaxed editorial style, unhurried shopping mood"
+        width="1024"
+        height="1024"
+        fetchpriority="high"
+        loading="eager"
+        decoding="async"
+      />
+      <div class="hero-dark-vignette"></div>
+      <div class="hero-dark-sparkles"></div>
+    </div>
+    <header class="relative z-10 flex flex-1 flex-col justify-center px-5 sm:px-8 pt-28 pb-20 sm:pt-32 sm:pb-28">
+      <div class="max-w-3xl mx-auto text-center w-full">
+        <p class="mb-5 sm:mb-6 text-[0.65rem] sm:text-[0.6875rem] font-medium uppercase tracking-[0.22em] text-[#5c4034] [text-shadow:0_1px_18px_rgba(253,248,242,0.75)]">
+          For mindful shoppers
+        </p>
+        <h1 class="font-display text-[2.35rem] sm:text-5xl md:text-[3.25rem] lg:text-[3.5rem] tracking-[-0.02em] leading-[1.05] mb-6 sm:mb-8 font-medium text-white text-balance [text-shadow:0_2px_32px_rgba(0,0,0,0.35)]">
+          The pause between <br class="sm:hidden">
+          <span class="italic text-white">wanting</span> and buying.
+        </h1>
+        <p class="text-base sm:text-lg font-light text-white/90 leading-relaxed mb-9 sm:mb-10 max-w-xl mx-auto [text-shadow:0_1px_20px_rgba(0,0,0,0.3)]">
+          When you try to add something to your cart, Dilly asks you to wait a few seconds. You can still buy it — you just get a moment to decide on purpose.
+        </p>
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-4 sm:gap-6">
+          <a href="#waitlist" class="inline-flex items-center justify-center gap-2 w-full sm:w-auto bg-white text-[#0f1419] px-8 sm:px-9 py-3.5 rounded-full text-sm font-semibold hover:bg-[#f2ece4] transition-colors shadow-[0_12px_40px_-12px_rgba(0,0,0,0.45)]">
+            Join the waitlist
+          </a>
+          <a href="#how-it-works" class="editorial-link-hero-dark inline-flex items-center justify-center gap-1 py-2">See how it works&nbsp;<span aria-hidden="true">→</span></a>
+        </div>
+        <p class="mt-7 sm:mt-8 text-[11px] sm:text-xs font-medium tracking-[0.2em] uppercase text-white/38">
+          Coming soon · Chrome extension · Free · No account
+        </p>
+      </div>
+    </header>
+  </section>
+
+  <!-- Problem / Solution -->
+  <section id="why-it-exists" class="py-24 sm:py-32 lg:py-40 relative bg-white/60 border-y border-[#3B2314]/[0.06] scroll-mt-24">
+    <div class="max-w-6xl mx-auto px-5 sm:px-6">
+      <p class="editorial-kicker text-center mb-4">Why it exists</p>
+      <h2 class="font-display text-3xl sm:text-4xl md:text-5xl tracking-tight mb-14 sm:mb-20 text-center font-medium text-[#3B2314] max-w-3xl mx-auto">
+        Shopping sites are built to go fast.
+      </h2>
+      <div class="grid md:grid-cols-2 gap-12 md:gap-20 items-start">
+        <div class="space-y-6 order-2 md:order-1">
+          <p class="text-[#3B2314]/80 text-lg sm:text-xl font-light leading-relaxed">
+            Timers, urgency copy, and one-click checkout are there to shorten the gap between impulse and order. That can work against you when you&rsquo;re tired or distracted.
+          </p>
+          <p class="text-[#3B2314]/80 text-lg sm:text-xl font-light leading-relaxed">
+            Dilly doesn&rsquo;t block purchases. It adds a short pause at the moment you try to add to cart, so you can choose with a clear head.
+          </p>
+        </div>
+        <div class="order-1 md:order-2 rounded-2xl p-8 sm:p-10 bg-gradient-to-br from-white/90 to-[#ebe3d6]/80 border border-[#3B2314]/[0.08] shadow-lift-sm">
+          <h3 class="font-display text-2xl sm:text-3xl tracking-tight mb-5 text-[#3B2314] font-medium">
+            Take a pause.
+          </h3>
+          <p class="text-[#3B2314]/80 text-base sm:text-lg font-light leading-relaxed">
+            You stay in control: wait out the timer and add the item, or tap &ldquo;not today.&rdquo; Optional stats are just for you — if you enable them, they stay in your browser.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Extension UI (matches Chrome extension design) -->
+  <section id="the-experience" class="scroll-mt-24 py-24 sm:py-32 relative dilly-bg-experience border-y border-[#3B2314]/[0.06]">
+    <div class="px-4 sm:px-6">
+      <div class="max-w-6xl mx-auto text-center mb-14 sm:mb-20">
+        <p class="editorial-kicker mb-4">In the browser</p>
+        <h2 class="font-display text-3xl sm:text-4xl md:text-5xl tracking-tight font-medium text-[#3B2314]">
+          What you&rsquo;ll see
+        </h2>
+        <p class="mt-5 text-[#3B2314]/70 max-w-2xl mx-auto font-light text-base sm:text-lg">
+          Real captures on Princess Polly (online fashion retailer) &mdash; pause overlay, sidebar, and settings.
+        </p>
+      </div>
+
+      <div
+        id="experience-carousel"
+        class="dilly-shot-carousel-wrap"
+        role="region"
+        aria-roledescription="slideshow"
+        aria-label="Dilly in the browser on a shopping site"
+        tabindex="0"
+      >
+        <div class="dilly-shot-slideshow-viewport">
+        <div id="experience-slides" class="dilly-shot-slideshow-track">
+        <figure id="experience-slide-0" class="dilly-shot m-0" aria-hidden="false">
+          <div class="dilly-shot-card">
+            <div class="dilly-shot-media">
+              <img
+                src="images/princess-polly-pause.png"
+                srcset="
+                  images/princess-polly-pause.png 1024w,
+                  images/princess-polly-pause@2x.png 2048w
+                "
+                sizes="min(100vw - 2rem, 54rem)"
+                alt="Pause overlay on Princess Polly"
+                width="1024"
+                height="568"
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+          </div>
+          <figcaption class="dilly-shot-caption">
+            <p class="dilly-shot-step">01 — Pause</p>
+            <span class="dilly-shot-title">Pause overlay</span>
+            <p class="dilly-shot-desc">Full-screen pause before you add to bag.</p>
+          </figcaption>
+        </figure>
+        <figure id="experience-slide-1" class="dilly-shot m-0" aria-hidden="true">
+          <div class="dilly-shot-card">
+            <div class="dilly-shot-media">
+              <img
+                src="images/princess-polly-sidebar.png"
+                srcset="
+                  images/princess-polly-sidebar.png 1024w,
+                  images/princess-polly-sidebar@2x.png 2048w
+                "
+                sizes="min(100vw - 2rem, 54rem)"
+                alt="Dilly sidebar tab on Princess Polly"
+                width="1024"
+                height="568"
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+          </div>
+          <figcaption class="dilly-shot-caption">
+            <p class="dilly-shot-step">02 — Sidebar</p>
+            <span class="dilly-shot-title">Sidebar</span>
+            <p class="dilly-shot-desc">The Dilly tab along the edge of the page.</p>
+          </figcaption>
+        </figure>
+        <figure id="experience-slide-2" class="dilly-shot m-0" aria-hidden="true">
+          <div class="dilly-shot-card">
+            <div class="dilly-shot-media">
+              <img
+                src="images/princess-polly-settings.png"
+                srcset="
+                  images/princess-polly-settings.png 1024w,
+                  images/princess-polly-settings@2x.png 2048w
+                "
+                sizes="min(100vw - 2rem, 54rem)"
+                alt="Dilly settings tab on Princess Polly"
+                width="1024"
+                height="568"
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+          </div>
+          <figcaption class="dilly-shot-caption">
+            <p class="dilly-shot-step">03 — Settings</p>
+            <span class="dilly-shot-title">Settings tab</span>
+            <p class="dilly-shot-desc">Thresholds, pause length, and your quiet wins.</p>
+          </figcaption>
+        </figure>
+        </div>
+        </div>
+        <nav class="dilly-shot-carousel-nav" aria-label="Screenshot slides">
+          <button type="button" class="dilly-shot-carousel-dot" aria-label="Show pause overlay" aria-current="true" data-carousel-index="0"></button>
+          <button type="button" class="dilly-shot-carousel-dot" aria-label="Show sidebar" aria-current="false" data-carousel-index="1"></button>
+          <button type="button" class="dilly-shot-carousel-dot" aria-label="Show settings" aria-current="false" data-carousel-index="2"></button>
+        </nav>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section id="how-it-works" class="scroll-mt-24 py-24 sm:py-32 lg:py-40 relative bg-[#f8f1ea]/50">
+    <div class="absolute inset-0 bg-gradient-to-b from-transparent via-[#ebe3d6]/15 to-transparent pointer-events-none -z-10"></div>
+    <div class="max-w-6xl mx-auto px-5 sm:px-6">
+      <div class="text-center mb-16 sm:mb-20">
+        <p class="editorial-kicker mb-4">The flow</p>
+        <h2 class="font-display text-3xl sm:text-4xl md:text-5xl tracking-tight mb-6 font-medium text-[#3B2314]">
+          How it works
+        </h2>
+        <p class="text-base sm:text-lg font-light text-[#3B2314]/70 max-w-xl mx-auto">Dilly runs only when you try to add something to your cart (or a similar checkout step).</p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-12 md:gap-10 lg:gap-14 max-w-5xl mx-auto">
+        <article class="how-flow-step text-left">
+          <p class="dilly-shot-step mb-3">01 — Browse</p>
+          <h3 class="font-display text-[1.45rem] sm:text-[1.55rem] tracking-tight text-[#3B2314] font-medium leading-snug mb-3">
+            Shop as usual
+          </h3>
+          <p class="text-[#3B2314]/72 text-[0.9375rem] leading-relaxed font-light">
+            Browse normally. Dilly stays out of the way until you try to add to cart or buy.
+          </p>
+        </article>
+
+        <article class="how-flow-step text-left">
+          <p class="dilly-shot-step mb-3">02 — Pause</p>
+          <h3 class="font-display text-[1.45rem] sm:text-[1.55rem] tracking-tight text-[#3B2314] font-medium leading-snug mb-3">
+            Short pause
+          </h3>
+          <p class="text-[#3B2314]/72 text-[0.9375rem] leading-relaxed font-light">
+            A small overlay appears with a timer you set (often starting around 10 seconds; you can choose 30, 60, or more in settings).
+          </p>
+        </article>
+
+        <article class="how-flow-step text-left">
+          <p class="dilly-shot-step mb-3">03 — Decide</p>
+          <h3 class="font-display text-[1.45rem] sm:text-[1.55rem] tracking-tight text-[#3B2314] font-medium leading-snug mb-3">
+            You choose
+          </h3>
+          <p class="text-[#3B2314]/72 text-[0.9375rem] leading-relaxed font-light">
+            When the timer ends, continue to checkout or step away. Optional stats stay only on your computer.
+          </p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="scroll-mt-24 py-24 sm:py-32 relative border-y border-[#3B2314]/[0.06] bg-white/55">
+    <div class="max-w-2xl mx-auto px-5 sm:px-6">
+      <p class="editorial-kicker text-center mb-4">FAQ</p>
+      <h2 class="font-display text-3xl sm:text-4xl md:text-[2.75rem] tracking-tight text-center font-medium text-[#3B2314] mb-4">
+        Common questions
+      </h2>
+      <p class="text-center text-sm sm:text-base text-[#3B2314]/65 font-light mb-12 max-w-lg mx-auto leading-relaxed">
+        Quick answers about how Dilly fits into your shopping.
+      </p>
+      <div class="dilly-faq space-y-3">
+        <details class="group rounded-2xl border border-[#3B2314]/[0.1] bg-[#fbf7f2]/60 px-5 py-4 transition-shadow open:shadow-lift-sm">
+          <summary class="flex cursor-pointer items-center justify-between gap-3 text-left text-base font-medium text-[#3B2314]">
+            Does Dilly stop me from buying things?
+            <iconify-icon icon="solar:alt-arrow-down-linear" class="text-xl shrink-0 text-[#a86b5c] transition-transform duration-200 group-open:rotate-180"></iconify-icon>
+          </summary>
+          <p class="mt-3 text-sm text-[#3B2314]/72 font-light leading-relaxed border-t border-[#3B2314]/[0.06] pt-3">
+            No. After the pause ends, you can add to bag or close the overlay. Dilly adds a moment to decide &mdash; it doesn&rsquo;t block checkout.
+          </p>
+        </details>
+        <details class="group rounded-2xl border border-[#3B2314]/[0.1] bg-[#fbf7f2]/60 px-5 py-4 transition-shadow open:shadow-lift-sm">
+          <summary class="flex cursor-pointer items-center justify-between gap-3 text-left text-base font-medium text-[#3B2314]">
+            Do I need an account?
+            <iconify-icon icon="solar:alt-arrow-down-linear" class="text-xl shrink-0 text-[#a86b5c] transition-transform duration-200 group-open:rotate-180"></iconify-icon>
+          </summary>
+          <p class="mt-3 text-sm text-[#3B2314]/72 font-light leading-relaxed border-t border-[#3B2314]/[0.06] pt-3">
+            No sign-up. When Dilly is on the Chrome Web Store, you&rsquo;ll install it like any extension and use it locally. Optional stats stay on your device.
+          </p>
+        </details>
+        <details class="group rounded-2xl border border-[#3B2314]/[0.1] bg-[#fbf7f2]/60 px-5 py-4 transition-shadow open:shadow-lift-sm">
+          <summary class="flex cursor-pointer items-center justify-between gap-3 text-left text-base font-medium text-[#3B2314]">
+            Is my browsing data sent anywhere?
+            <iconify-icon icon="solar:alt-arrow-down-linear" class="text-xl shrink-0 text-[#a86b5c] transition-transform duration-200 group-open:rotate-180"></iconify-icon>
+          </summary>
+          <p class="mt-3 text-sm text-[#3B2314]/72 font-light leading-relaxed border-t border-[#3B2314]/[0.06] pt-3">
+            Dilly is built for privacy-first use: nothing is synced to our servers for accounts you don&rsquo;t have. Behaviour stays in your browser per Chrome&rsquo;s extension model.
+          </p>
+        </details>
+        <details class="group rounded-2xl border border-[#3B2314]/[0.1] bg-[#fbf7f2]/60 px-5 py-4 transition-shadow open:shadow-lift-sm">
+          <summary class="flex cursor-pointer items-center justify-between gap-3 text-left text-base font-medium text-[#3B2314]">
+            When does the pause appear?
+            <iconify-icon icon="solar:alt-arrow-down-linear" class="text-xl shrink-0 text-[#a86b5c] transition-transform duration-200 group-open:rotate-180"></iconify-icon>
+          </summary>
+          <p class="mt-3 text-sm text-[#3B2314]/72 font-light leading-relaxed border-t border-[#3B2314]/[0.06] pt-3">
+            When you try to add something to your cart (or a similar step on supported sites). You can adjust thresholds and pause length in settings.
+          </p>
+        </details>
+        <details class="group rounded-2xl border border-[#3B2314]/[0.1] bg-[#fbf7f2]/60 px-5 py-4 transition-shadow open:shadow-lift-sm">
+          <summary class="flex cursor-pointer items-center justify-between gap-3 text-left text-base font-medium text-[#3B2314]">
+            Is Dilly free?
+            <iconify-icon icon="solar:alt-arrow-down-linear" class="text-xl shrink-0 text-[#a86b5c] transition-transform duration-200 group-open:rotate-180"></iconify-icon>
+          </summary>
+          <p class="mt-3 text-sm text-[#3B2314]/72 font-light leading-relaxed border-t border-[#3B2314]/[0.06] pt-3">
+            Yes &mdash; free to install. No in-app subscriptions pitched here.
+          </p>
+        </details>
+        <details class="group rounded-2xl border border-[#3B2314]/[0.1] bg-[#fbf7f2]/60 px-5 py-4 transition-shadow open:shadow-lift-sm">
+          <summary class="flex cursor-pointer items-center justify-between gap-3 text-left text-base font-medium text-[#3B2314]">
+            Which sites does it work on?
+            <iconify-icon icon="solar:alt-arrow-down-linear" class="text-xl shrink-0 text-[#a86b5c] transition-transform duration-200 group-open:rotate-180"></iconify-icon>
+          </summary>
+          <p class="mt-3 text-sm text-[#3B2314]/72 font-light leading-relaxed border-t border-[#3B2314]/[0.06] pt-3">
+            Dilly is built for shopping sites where you add items to a cart or bag. It won&rsquo;t run on every URL &mdash; it activates on supported checkout-style flows. If something doesn&rsquo;t trigger yet, settings and updates over time can improve coverage.
+          </p>
+        </details>
+        <details class="group rounded-2xl border border-[#3B2314]/[0.1] bg-[#fbf7f2]/60 px-5 py-4 transition-shadow open:shadow-lift-sm">
+          <summary class="flex cursor-pointer items-center justify-between gap-3 text-left text-base font-medium text-[#3B2314]">
+            Does it work on mobile?
+            <iconify-icon icon="solar:alt-arrow-down-linear" class="text-xl shrink-0 text-[#a86b5c] transition-transform duration-200 group-open:rotate-180"></iconify-icon>
+          </summary>
+          <p class="mt-3 text-sm text-[#3B2314]/72 font-light leading-relaxed border-t border-[#3B2314]/[0.06] pt-3">
+            Dilly is a <strong class="font-medium text-[#3B2314]/85">Chrome desktop extension</strong>. It doesn&rsquo;t run in mobile Safari or Chrome on phones the same way. Use it in Chrome on your computer.
+          </p>
+        </details>
+        <details class="group rounded-2xl border border-[#3B2314]/[0.1] bg-[#fbf7f2]/60 px-5 py-4 transition-shadow open:shadow-lift-sm">
+          <summary class="flex cursor-pointer items-center justify-between gap-3 text-left text-base font-medium text-[#3B2314]">
+            Can I pause or turn Dilly off?
+            <iconify-icon icon="solar:alt-arrow-down-linear" class="text-xl shrink-0 text-[#a86b5c] transition-transform duration-200 group-open:rotate-180"></iconify-icon>
+          </summary>
+          <p class="mt-3 text-sm text-[#3B2314]/72 font-light leading-relaxed border-t border-[#3B2314]/[0.06] pt-3">
+            Yes. You can adjust when pauses happen, how long they last, and use your browser&rsquo;s extension controls to disable Dilly anytime &mdash; you stay in charge.
+          </p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- Final CTA -->
+  <section class="relative isolate overflow-hidden py-32 sm:py-40 md:py-44 text-center min-h-[26rem] sm:min-h-[30rem] flex flex-col justify-center border-t border-[#3B2314]/[0.06]">
+    <div class="absolute inset-0 z-0 bg-[#e5d9cc]" aria-hidden="true">
+      <img
+        class="final-cta-photo"
+        src="images/give-yourself-a-moment.png"
+        alt="Calm beach at golden hour, figure in white walking on the sand, open sky"
+        width="1200"
+        height="1600"
+        loading="lazy"
+        decoding="async"
+      />
+      <div class="final-cta-grain" aria-hidden="true"></div>
+      <div class="final-cta-scrim"></div>
+      <div class="final-cta-bottom-fade" aria-hidden="true"></div>
+    </div>
+    <div class="max-w-2xl mx-auto px-5 sm:px-6 relative z-10">
+      <h2 class="font-display text-4xl sm:text-5xl md:text-6xl tracking-tight mb-6 font-medium text-[#3B2314] leading-[1.08]">
+        Give yourself <br class="hidden sm:block"> a moment.
+      </h2>
+      <p class="text-base sm:text-lg font-light text-[#3B2314]/85 mb-10 max-w-md mx-auto">
+        Launching soon on the Chrome Web Store. Join the waitlist and we&rsquo;ll email you once.
+      </p>
+      <a href="#waitlist" class="inline-flex items-center justify-center gap-2 bg-[#3B2314] text-[#fbf7f2] px-9 py-3.5 rounded-full text-base font-medium hover:bg-[#2C1A0E] transition-colors shadow-[0_12px_36px_-10px_rgba(59,35,20,0.3)]">
+        Join the waitlist
+      </a>
+    </div>
+  </section>
+
+  <footer class="footer-polka relative px-5 sm:px-8 pt-12 sm:pt-16 pb-14 sm:pb-16">
+    <div class="footer-polka-text max-w-md mx-auto flex flex-col items-center text-center gap-7">
+      <div>
+        <div class="font-display text-xl tracking-tight italic text-[#3B2314] font-semibold mb-1">Dilly</div>
+        <p class="text-[11px] font-light text-[#3B2314]/62 tracking-[0.2em] uppercase">Mindful shopping for Chrome</p>
+      </div>
+
+      <!-- Waitlist: Basic HTML POST to Formspree (success = Formspree thank-you page, or set redirect in Formspree dashboard) -->
+      <div id="waitlist" class="scroll-mt-24 w-full max-w-md mx-auto rounded-2xl border border-[#3B2314]/[0.1] bg-[#fbf7f2]/85 px-5 py-6 sm:px-6 sm:py-7 text-left">
+        <p class="editorial-kicker text-center mb-2">Waitlist</p>
+        <h3 class="font-display text-xl sm:text-2xl text-[#3B2314] font-medium text-center mb-2 leading-snug">
+          Get notified at launch
+        </h3>
+        <p class="text-sm text-[#3B2314]/68 font-light leading-relaxed text-center mb-5">
+          Leave your email and we&rsquo;ll send one message when Dilly is on the Chrome Web Store.
+        </p>
+        <form
+          class="flex flex-col sm:flex-row gap-2 sm:items-stretch"
+          action="https://formspree.io/f/xpqojebe"
+          method="POST"
+          accept-charset="UTF-8"
+        >
+          <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" class="sr-only" aria-hidden="true" />
+          <label for="waitlist-email" class="sr-only">Email</label>
+          <input
+            id="waitlist-email"
+            type="email"
+            name="email"
+            required
+            autocomplete="email"
+            inputmode="email"
+            placeholder="you@email.com"
+            class="min-w-0 flex-1 rounded-full border border-[#3B2314]/[0.14] bg-white px-4 py-2.5 text-sm text-[#3B2314] placeholder:text-[#3B2314]/38 focus:outline-none focus:ring-2 focus:ring-[#a86b5c]/45"
+          />
+          <input type="hidden" name="_subject" value="Dilly waitlist" />
+          <button
+            type="submit"
+            class="shrink-0 rounded-full bg-[#3B2314] px-5 py-2.5 text-sm font-medium text-[#fbf7f2] transition-colors hover:bg-[#2C1A0E] sm:px-6"
+          >
+            Join waitlist
+          </button>
+        </form>
+        <p class="mt-3 text-center text-[11px] font-light text-[#3B2314]/48">
+          No spam. Unsubscribe anytime. We don&rsquo;t sell your email.
+        </p>
+      </div>
+
+      <nav class="flex flex-wrap justify-center items-center gap-x-8 gap-y-3" aria-label="Footer">
+        <a href="#coming-soon" class="text-xs font-medium text-[#3B2314]/82 hover:text-[#3B2314] transition-colors">Privacy Policy</a>
+        <a href="#coming-soon" class="text-xs font-medium text-[#3B2314]/82 hover:text-[#3B2314] transition-colors">Chrome Web Store</a>
+        <a href="mailto:shrikha56@gmail.com" class="text-xs font-medium text-[#3B2314]/82 hover:text-[#3B2314] transition-colors">Contact</a>
+      </nav>
+      <p id="coming-soon" class="scroll-mt-24 max-w-xs mx-auto pt-1 text-center text-[11px] font-light leading-relaxed text-[#3B2314]/55">
+        Privacy policy and Chrome Web Store listing &mdash; coming soon.
+      </p>
+    </div>
+  </footer>
+
+  <!-- Floating CTA — hidden until you scroll past the hero (reduces duplicate CTAs on first paint) -->
+  <div id="floating-cta" class="floating-cta--off fixed bottom-5 left-1/2 -translate-x-1/2 z-[60] w-[min(calc(100vw-1.5rem),24rem)]" aria-hidden="true">
+    <a href="#waitlist" class="flex w-full items-center justify-center gap-2 rounded-full border border-[#3B2314]/[0.12] bg-[#fbf7f2]/95 text-[#3B2314] px-5 py-3.5 text-sm font-medium hover:bg-white transition-colors">
+      Join the waitlist
+    </a>
+  </div>
+
+  <script>
+    (function () {
+      var hero = document.getElementById('hero-dark');
+      var floatBar = document.getElementById('floating-cta');
+      if (hero && floatBar) {
+        function syncFloat(entry) {
+          if (entry.isIntersecting) {
+            floatBar.classList.add('floating-cta--off');
+            floatBar.setAttribute('aria-hidden', 'true');
+          } else {
+            floatBar.classList.remove('floating-cta--off');
+            floatBar.setAttribute('aria-hidden', 'false');
+          }
+        }
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(syncFloat);
+        }, { threshold: 0, rootMargin: '0px' });
+        io.observe(hero);
+      }
+
+      var track = document.getElementById('experience-slides');
+      var carouselRegion = document.getElementById('experience-carousel');
+      var triggers = document.querySelectorAll('#experience-carousel [data-carousel-index]');
+      if (track && triggers.length) {
+        var slides = track.querySelectorAll('figure');
+        var current = 0;
+        var AUTOPLAY_MS = 5500;
+        var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        var autoplayTimer = null;
+        var hoverPaused = false;
+        var inView = true;
+
+        function clearAutoplay() {
+          if (autoplayTimer) {
+            clearInterval(autoplayTimer);
+            autoplayTimer = null;
+          }
+        }
+
+        function startAutoplay() {
+          clearAutoplay();
+          if (reduceMotion || !carouselRegion || hoverPaused || !inView || document.hidden) return;
+          autoplayTimer = setInterval(function () {
+            goTo((current + 1) % slides.length);
+          }, AUTOPLAY_MS);
+        }
+
+        function syncUi(i) {
+          i = Math.max(0, Math.min(slides.length - 1, i));
+          current = i;
+          triggers.forEach(function (el) {
+            var j = parseInt(el.getAttribute('data-carousel-index'), 10);
+            el.setAttribute('aria-current', j === i ? 'true' : 'false');
+          });
+        }
+
+        function goTo(i) {
+          if (!slides.length) return;
+          i = Math.max(0, Math.min(slides.length - 1, i));
+          var pct = (i * 100) / slides.length;
+          track.style.transform = 'translateX(-' + pct + '%)';
+          syncUi(i);
+          slides.forEach(function (fig, j) {
+            fig.setAttribute('aria-hidden', j !== i ? 'true' : 'false');
+          });
+        }
+
+        function userGoTo(i) {
+          goTo(i);
+          startAutoplay();
+        }
+
+        triggers.forEach(function (el) {
+          el.addEventListener('click', function () {
+            userGoTo(parseInt(el.getAttribute('data-carousel-index'), 10));
+          });
+        });
+
+        var touchStartX = null;
+        track.addEventListener(
+          'touchstart',
+          function (e) {
+            touchStartX = e.changedTouches[0].screenX;
+          },
+          { passive: true }
+        );
+        track.addEventListener(
+          'touchend',
+          function (e) {
+            if (touchStartX === null) return;
+            var dx = e.changedTouches[0].screenX - touchStartX;
+            touchStartX = null;
+            if (Math.abs(dx) < 48) return;
+            if (dx < 0) userGoTo(current + 1);
+            else userGoTo(current - 1);
+          },
+          { passive: true }
+        );
+
+        if (carouselRegion) {
+          carouselRegion.addEventListener('keydown', function (e) {
+            if (!slides.length) return;
+            if (e.key === 'ArrowLeft') {
+              e.preventDefault();
+              userGoTo(current - 1);
+            } else if (e.key === 'ArrowRight') {
+              e.preventDefault();
+              userGoTo(current + 1);
+            } else if (e.key === 'Home') {
+              e.preventDefault();
+              userGoTo(0);
+            } else if (e.key === 'End') {
+              e.preventDefault();
+              userGoTo(slides.length - 1);
+            }
+          });
+
+          carouselRegion.addEventListener('mouseenter', function () {
+            hoverPaused = true;
+            clearAutoplay();
+          });
+          carouselRegion.addEventListener('mouseleave', function () {
+            hoverPaused = false;
+            startAutoplay();
+          });
+
+          var slideIo = new IntersectionObserver(
+            function (entries) {
+              entries.forEach(function (entry) {
+                inView = entry.isIntersecting;
+                if (!inView) clearAutoplay();
+                else startAutoplay();
+              });
+            },
+            { threshold: 0.12, rootMargin: '0px' }
+          );
+          slideIo.observe(carouselRegion);
+        }
+
+        document.addEventListener('visibilitychange', function () {
+          if (document.hidden) clearAutoplay();
+          else startAutoplay();
+        });
+
+        goTo(0);
+        startAutoplay();
+      }
+    })();
+  </script>
+</body>
+</html>

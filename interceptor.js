@@ -2,7 +2,6 @@
   const CART_PATTERNS = [
     /\/cart\/add/i,
     /\/cart\.js/i,
-    /\/cart\/update/i,
     /\/cart\/ajax/i,
     /\/api\/cart/i,
     /\/checkout\/cart/i,

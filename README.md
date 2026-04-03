@@ -36,6 +36,19 @@ Dilly is a Chrome extension that adds a gentle pause between "add to cart" and c
 4. Try `Not today` to record a pause.
 5. Try waiting for the timer and then click `Yes, add it` to let the original purchase action continue.
 
+## Deploy landing (Vercel)
+
+The marketing page lives in `landing/` (`index.html` + `images/`).
+
+1. Push this repo to GitHub, GitLab, or Bitbucket.
+2. In [Vercel](https://vercel.com), create a **New Project** and import the repo.
+3. Leave **Framework Preset** as **Other** and leave **Build Command** / **Output Directory** empty (static site).
+4. Deploy. The included root `vercel.json` serves `landing/index.html` at `/` and maps `/images/*` to `landing/images/*`.
+
+**Alternative:** In the Vercel project **Settings → General → Root Directory**, set `landing` and remove or ignore the root `vercel.json` rewrites so `index.html` is served at `/` without redirects.
+
+Deploy from the CLI (after `npm i -g vercel` or `npx vercel`): from the `dilly` folder run `vercel` for a preview, or `vercel --prod` for production.
+
 ## Notes
 
 - Dilly stores everything locally on the device.

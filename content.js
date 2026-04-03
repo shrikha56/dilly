@@ -1,5 +1,15 @@
 console.warn("[Dilly] Content script loaded on:", window.location.href);
 
+/** Cart POSTs (fetch/XHR) can fire without an add click — only pause if user just interacted */
+let lastTrustedUserActivationAt = 0;
+const NETWORK_PAUSE_GESTURE_MS = 5000;
+
+function bumpUserActivation(ev) {
+  if (ev && ev.isTrusted) {
+    lastTrustedUserActivationAt = Date.now();
+  }
+}
+
 const DILLY_ROOT_ID = "dilly-overlay-root";
 const INTERCEPTABLE_SELECTOR = [
   "button",
@@ -23,9 +33,13 @@ const INTERCEPTABLE_SELECTOR = [
   '[aria-label*="add to bag" i]',
   '[aria-label*="add to basket" i]',
   '[aria-label*="buy now" i]',
-  'a[href*="cart" i]',
-  'a[href*="bag" i]',
-  'a[href*="basket" i]',
+  'a[href*="/cart/add" i]',
+  'a[href*="cart_add" i]',
+  'a[href*="add-to-cart" i]',
+  'a[href*="addtocart" i]',
+  'a[href*="add-to-bag" i]',
+  'a[href*="addtobag" i]',
+  'a[href*="add_to_cart" i]',
   'a[href*="checkout" i]',
   'form[action*="checkout" i] [type="submit"]',
   'form[action*="cart" i] [type="submit"]'
@@ -619,6 +633,23 @@ function parsePriceFromText(text) {
   return null;
 }
 
+/**
+ * Homepage / JSON price fields often encode cents or minor units; 7000 can display as $7000 when the item is ~$70.
+ */
+function maybeFixMisscaledPrice(p) {
+  if (!p || typeof p.value !== "number" || !Number.isFinite(p.value)) {
+    return p;
+  }
+  const v = p.value;
+  if (v >= 1000 && v < 50000 && v % 100 === 0) {
+    const asDollars = v / 100;
+    if (asDollars >= 10 && asDollars <= 499) {
+      return { value: asDollars, display: `$${asDollars.toFixed(2)}` };
+    }
+  }
+  return p;
+}
+
 function getContainerCandidates(trigger) {
   const candidates = [];
   let current = trigger;
@@ -930,8 +961,16 @@ async function maybeIntercept(event) {
 }
 
 document.addEventListener(
+  "pointerdown",
+  bumpUserActivation,
+  true
+);
+
+document.addEventListener(
   "click",
   (event) => {
+    bumpUserActivation(event);
+
     const el = event.target;
     if (el instanceof Element) {
       const text = getTextSignature(el);
@@ -944,6 +983,16 @@ document.addEventListener(
     maybeIntercept(event).catch(() => {
       console.warn("[Dilly] Intercept error on click; action not auto-replayed.");
     });
+  },
+  true
+);
+
+document.addEventListener(
+  "keydown",
+  (event) => {
+    if (event.isTrusted && (event.key === "Enter" || event.key === " ")) {
+      bumpUserActivation(event);
+    }
   },
   true
 );
@@ -980,10 +1029,22 @@ async function handleCartRequest(event) {
     return;
   }
 
+  if (Date.now() - lastTrustedUserActivationAt > NETWORK_PAUSE_GESTURE_MS) {
+    console.warn(
+      "[Dilly] Cart request without a recent click/keypress — allowing (no pause). Add-to-cart uses a tap within the last few seconds."
+    );
+    document.dispatchEvent(
+      new CustomEvent("dilly-cart-response", {
+        detail: { id: detail.id, allow: true }
+      })
+    );
+    return;
+  }
+
   networkInterceptActive = true;
 
   const siteName = getActiveSiteName() || formatHostname(window.location.hostname);
-  const price = extractPriceFromPage() || prefetchedPrice;
+  const price = maybeFixMisscaledPrice(extractPriceFromPage() || prefetchedPrice);
   console.warn("[Dilly] Network intercept — final price:", price ? `${price.display} (value=${price.value})` : "NONE");
   const productKey = buildProductKey(siteName);
 
@@ -1392,14 +1453,14 @@ async function prefetchPrice() {
 prefetchPrice();
 
 function getResolvedPrice(trigger) {
-  const domPrice = extractPrice(trigger);
+  const domPrice = maybeFixMisscaledPrice(extractPrice(trigger));
   console.warn("[Dilly] DOM price:", domPrice ? domPrice.display : "null");
 
   if (domPrice) {
     return domPrice;
   }
 
-  const pagePrice = extractPriceFromPage();
+  const pagePrice = maybeFixMisscaledPrice(extractPriceFromPage());
   console.warn("[Dilly] Page price:", pagePrice ? pagePrice.display : "null");
 
   if (pagePrice) {
@@ -1407,7 +1468,7 @@ function getResolvedPrice(trigger) {
   }
 
   console.warn("[Dilly] Prefetched price:", prefetchedPrice ? prefetchedPrice.display : "null");
-  return prefetchedPrice;
+  return maybeFixMisscaledPrice(prefetchedPrice);
 }
 
 document.addEventListener("dilly-cart-request", (event) => {
@@ -1531,17 +1592,18 @@ async function openSettingsOverlay() {
     root.innerHTML = `
       <div class="dilly-overlay-backdrop"></div>
       <div class="dilly-overlay-dialog" role="dialog" aria-modal="true">
-        <div class="dilly-overlay-card" style="max-width:400px;padding:28px 24px 24px;">
+        <div class="dilly-overlay-card dilly-popup-sheet">
           <button type="button" class="dilly-overlay-close" data-stx aria-label="Close">\u00d7</button>
 
-          <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
-            <span class="dilly-brand-mark" aria-hidden="true">D</span>
-            <span style="font-size:15px;font-weight:600;color:var(--dilly-charcoal)">Dilly</span>
-          </div>
-          <h2 class="dilly-overlay-headline" style="font-size:26px;margin-bottom:4px">Spend with a little more intention.</h2>
-          <p class="dilly-overlay-copy" style="margin-bottom:16px">Gentle pauses, local-only stats, and zero guilt.</p>
+          <header>
+            <div class="dilly-brand">
+              <img class="dilly-brand-mark" src="${chrome.runtime.getURL("icons/icon48.png")}" width="44" height="44" alt="" />
+            </div>
+            <h2 class="dilly-popup-title">Spend with a little more intention.</h2>
+            <p class="dilly-popup-subtitle">Gentle pauses, local-only stats, and zero guilt.</p>
+          </header>
 
-          <div style="border-top:1px solid var(--dilly-line);padding-top:14px;display:grid;gap:14px">
+          <section class="dilly-settings-group">
             <div class="dilly-setting-row">
               <div><p class="dilly-setting-label">Intentional Mode</p><p class="dilly-setting-help">Pause every add-to-cart moment.</p></div>
               <label class="dilly-switch"><input id="ds-intentional" type="checkbox" ${s.intentionalMode ? "checked" : ""}/><span class="dilly-switch-track"></span></label>
@@ -1552,7 +1614,8 @@ async function openSettingsOverlay() {
             </div>
             <div>
               <p class="dilly-setting-label">Pause length</p>
-              <div id="ds-pause-opts" class="dilly-timer-options" style="margin-top:6px">
+              <p class="dilly-setting-help">How long before "Yes, add it" unlocks.</p>
+              <div id="ds-pause-opts" class="dilly-timer-options">
                 <button type="button" class="dilly-timer-chip ${s.pauseDurationSeconds === 10 ? "is-active" : ""}" data-sec="10">10s</button>
                 <button type="button" class="dilly-timer-chip ${(s.pauseDurationSeconds || 30) === 30 ? "is-active" : ""}" data-sec="30">30s</button>
                 <button type="button" class="dilly-timer-chip ${s.pauseDurationSeconds === 60 ? "is-active" : ""}" data-sec="60">1 min</button>
@@ -1562,11 +1625,13 @@ async function openSettingsOverlay() {
               <div><p class="dilly-setting-label">Pause Dilly</p><p class="dilly-setting-help">Shop without interruptions.</p></div>
               <label class="dilly-switch"><input id="ds-paused" type="checkbox" ${s.isPaused ? "checked" : ""}/><span class="dilly-switch-track"></span></label>
             </div>
-          </div>
+          </section>
 
-          <div style="border-top:1px solid var(--dilly-line);margin-top:16px;padding-top:14px">
-            <p class="dilly-setting-label">Your quiet wins</p>
-            <p class="dilly-setting-help" style="margin-bottom:10px">${summary}</p>
+          <section class="dilly-stats-panel">
+            <div class="dilly-stats-header">
+              <p class="dilly-setting-label">Your quiet wins</p>
+              <p class="dilly-inline-note">${summary}</p>
+            </div>
             <div class="dilly-stats-grid">
               <article class="dilly-stat-card"><p class="dilly-stat-value">${pausedWeek}</p><p class="dilly-stat-label">Paused this week</p></article>
               <article class="dilly-stat-card"><p class="dilly-stat-value">${notToday}</p><p class="dilly-stat-label">Not today</p></article>
@@ -1574,9 +1639,9 @@ async function openSettingsOverlay() {
               <article class="dilly-stat-card"><p class="dilly-stat-value">${curStreak}</p><p class="dilly-stat-label">Current streak</p></article>
               <article class="dilly-stat-card"><p class="dilly-stat-value">${bestStreak}</p><p class="dilly-stat-label">Best streak</p></article>
             </div>
-          </div>
+          </section>
 
-          <p style="margin:14px 0 0;text-align:center;font-size:11px;color:var(--dilly-ink)">Everything stays on this device. No accounts, no sync, no tracking.</p>
+          <p class="dilly-popup-footer-note">Everything stays on this device. No accounts, no sync, no tracking.</p>
         </div>
       </div>
     `;
