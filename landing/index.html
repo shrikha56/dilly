@@ -513,6 +513,16 @@
       .hero-dark-sparkles {
         opacity: 0.035;
       }
+      /* Brown link on cream panel (mobile); desktop hero keeps light link */
+      #hero-dark .editorial-link-hero-dark {
+        color: #5c3d2e;
+        border-bottom-color: rgba(92, 61, 46, 0.28);
+        text-shadow: none;
+      }
+      #hero-dark .editorial-link-hero-dark:hover {
+        color: #8a5a4a;
+        border-bottom-color: rgba(168, 107, 92, 0.45);
+      }
       .editorial-kicker {
         font-size: 0.625rem;
         letter-spacing: 0.2em;
@@ -570,24 +580,24 @@
       <div class="hero-dark-sparkles"></div>
     </div>
     <header class="relative z-10 flex flex-1 flex-col justify-center px-4 sm:px-8 pt-28 pb-28 sm:pt-32 sm:pb-28">
-      <div class="max-w-[min(100%,20rem)] sm:max-w-3xl mx-auto w-full text-center rounded-2xl border border-white/15 bg-black/35 px-4 py-8 shadow-[0_24px_48px_-12px_rgba(0,0,0,0.45)] backdrop-blur-[6px] sm:rounded-none sm:border-0 sm:bg-transparent sm:px-0 sm:py-0 sm:shadow-none sm:backdrop-blur-none">
-        <p class="mb-5 sm:mb-6 text-[0.625rem] sm:text-[0.6875rem] font-medium uppercase tracking-[0.18em] sm:tracking-[0.22em] text-[#f5ebe3] [text-shadow:0_1px_3px_rgba(0,0,0,0.55)] sm:[text-shadow:0_1px_18px_rgba(0,0,0,0.35)]">
+      <div class="max-w-[min(100%,17.25rem)] sm:max-w-3xl mx-auto w-full text-center rounded-2xl border border-[#e5d4c4]/90 bg-[#fbf7f2]/90 px-3 py-6 shadow-[0_22px_44px_-14px_rgba(59,35,20,0.14),inset_0_1px_0_rgba(255,255,255,0.92)] backdrop-blur-md ring-1 ring-white/70 sm:rounded-none sm:border-0 sm:bg-transparent sm:px-0 sm:py-0 sm:shadow-none sm:backdrop-blur-none sm:ring-0">
+        <p class="mb-5 sm:mb-6 text-[0.625rem] sm:text-[0.6875rem] font-medium uppercase tracking-[0.18em] sm:tracking-[0.22em] text-[#a86b5c] sm:text-[#f5ebe3] sm:[text-shadow:0_1px_18px_rgba(0,0,0,0.35)]">
           For mindful shoppers
         </p>
-        <h1 class="font-display text-[1.3125rem] leading-[1.38] sm:text-5xl sm:leading-[1.05] md:text-[3.25rem] lg:text-[3.5rem] tracking-[-0.02em] mb-6 sm:mb-8 font-medium text-white text-balance [text-shadow:0_2px_20px_rgba(0,0,0,0.55),0_1px_3px_rgba(0,0,0,0.8)] sm:[text-shadow:0_2px_28px_rgba(0,0,0,0.42)]">
+        <h1 class="font-display text-[1.3125rem] leading-[1.38] sm:text-5xl sm:leading-[1.05] md:text-[3.25rem] lg:text-[3.5rem] tracking-[-0.02em] mb-6 sm:mb-8 font-medium text-[#3B2314] sm:text-white text-balance sm:[text-shadow:0_2px_28px_rgba(0,0,0,0.42)]">
           The pause between <br class="sm:hidden">
-          <span class="italic text-white">wanting</span> and buying.
+          <span class="italic text-[#3B2314] sm:text-white">wanting</span> and buying.
         </h1>
-        <p class="text-[0.8125rem] sm:text-lg font-light text-white/95 leading-[1.65] sm:leading-relaxed mb-8 sm:mb-10 max-w-xl mx-auto [text-shadow:0_1px_8px_rgba(0,0,0,0.65)] sm:[text-shadow:0_1px_16px_rgba(0,0,0,0.35)]">
+        <p class="text-[0.8125rem] sm:text-lg font-light text-[#3B2314]/88 sm:text-white/95 leading-[1.65] sm:leading-relaxed mb-8 sm:mb-10 max-w-xl mx-auto sm:[text-shadow:0_1px_16px_rgba(0,0,0,0.35)]">
           When you try to add something to your cart, Dilly asks you to wait a few seconds. You can still buy it — you just get a moment to decide on purpose.
         </p>
         <div class="flex flex-col sm:flex-row items-center justify-center gap-5 sm:gap-7">
-          <a href="#waitlist" class="inline-flex w-fit max-w-[11rem] mx-auto sm:mx-0 sm:max-w-none items-center justify-center gap-1 shrink-0 bg-white text-[#0f1419] px-4 py-2 sm:px-9 sm:py-3.5 rounded-full text-xs sm:text-sm font-semibold hover:bg-[#f2ece4] transition-colors shadow-[0_12px_32px_-8px_rgba(0,0,0,0.55)]">
+          <a href="#waitlist" class="inline-flex w-fit max-w-[11rem] mx-auto sm:mx-0 sm:max-w-none items-center justify-center gap-1 shrink-0 bg-[#3B2314] text-[#fbf7f2] px-4 py-2 sm:bg-white sm:text-[#0f1419] sm:px-9 sm:py-3.5 rounded-full text-xs sm:text-sm font-semibold hover:bg-[#2c241e] sm:hover:bg-[#f2ece4] transition-colors shadow-[0_10px_24px_-6px_rgba(59,35,20,0.35)] sm:shadow-[0_12px_32px_-8px_rgba(0,0,0,0.55)]">
             Join the waitlist
           </a>
-          <a href="#how-it-works" class="editorial-link-hero-dark inline-flex items-center justify-center gap-1 py-1 text-[0.75rem] sm:text-[0.875rem] [text-shadow:0_1px_6px_rgba(0,0,0,0.75)]">See how it works&nbsp;<span aria-hidden="true">→</span></a>
+          <a href="#how-it-works" class="editorial-link-hero-dark inline-flex items-center justify-center gap-1 py-1 text-[0.75rem] sm:text-[0.875rem]">See how it works&nbsp;<span aria-hidden="true">→</span></a>
         </div>
-        <p class="mt-8 sm:mt-9 text-[10px] sm:text-xs font-medium tracking-[0.15em] sm:tracking-[0.2em] uppercase text-white/70 sm:text-white/50 [text-shadow:0_1px_4px_rgba(0,0,0,0.6)]">
+        <p class="mt-8 sm:mt-9 text-[10px] sm:text-xs font-medium tracking-[0.15em] sm:tracking-[0.2em] uppercase text-[#3B2314]/45 sm:text-white/50 sm:[text-shadow:0_1px_4px_rgba(0,0,0,0.35)]">
           Coming soon · Chrome extension · Free · No account
         </p>
       </div>
