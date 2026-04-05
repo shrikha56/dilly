@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Dilly",
   "description": "A gentle shopping pause that helps you spend more intentionally.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "permissions": ["storage"],
   "host_permissions": ["<all_urls>"],
   "icons": {
