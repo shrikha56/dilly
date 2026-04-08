@@ -124,7 +124,8 @@ const SITE_CONFIGS = [
       '[id*="buy-now" i]',
       '[data-action="add-to-cart"]'
     ],
-    priceSelectors: [".a-price .a-offscreen", "#corePrice_feature_div .a-offscreen"]
+    priceSelectors: [".a-price .a-offscreen", "#corePrice_feature_div .a-offscreen"],
+    cartTotalSelectors: ["#sc-subtotal-amount-activecart", "#subtotal-amount", ".sc-subtotal-activecart .a-offscreen"]
   },
   {
     name: "ASOS",
@@ -184,6 +185,16 @@ const SHOPIFY_SELECTORS = [
   ".shopify-payment-button__button"
 ];
 
+const SHOPIFY_CART_TOTAL_SELECTORS = [
+  '.totals__subtotal-value',
+  '[data-cart-subtotal]',
+  '.cart__subtotal',
+  '.cart-subtotal__price',
+  '.cart-drawer__subtotal',
+  '[data-cart-total]',
+  '.cart-total__price'
+];
+
 const GENERIC_PRICE_SELECTORS = [
   '[data-testid*="price"]',
   '[data-test*="price"]',
@@ -209,22 +220,27 @@ const GENERIC_PRICE_SELECTORS = [
   '[id*="Price"]'
 ];
 
-const HEADLINES = [
-  "Still feeling this?",
-  "Is this the one?",
-  "Sleep on it?",
-  "Are you sure this is the one?",
-  "Is this a yes or a maybe?",
-  "Future you is watching."
+const CART_TOTAL_SELECTORS = [
+  '[class*="subtotal" i]',
+  '[class*="cart-total" i]',
+  '[class*="cartTotal" i]',
+  '[class*="order-total" i]',
+  '[class*="orderTotal" i]',
+  '[class*="grand-total" i]',
+  '[class*="grandTotal" i]',
+  '[data-subtotal]',
+  '[data-cart-total]',
+  '[data-cart-subtotal]',
+  '[data-order-total]',
+  '.totals__subtotal-value',
+  '.cart__subtotal',
+  '#cart-subtotal',
+  '[class*="cart__total"]',
+  '[class*="cart-subtotal"]',
+  '[class*="cartSubtotal"]'
 ];
 
-const SUPPORT_LINES = [
-  "Your cart will still be here tomorrow.",
-  "A little pause can be very chic.",
-  "You can want it and still wait a minute.",
-  "A thoughtful yes always lands better.",
-  "Sometimes it's better not to make that purchase."
-];
+const SUPPORT_LINES = [];
 
 const AFFIRMATIONS = [
   "Good call. Your future self thanks you.",
@@ -240,7 +256,12 @@ const DEFAULT_SETTINGS = {
   spendingThreshold: 30,
   pauseDurationSeconds: 30,
   intentionalMode: false,
-  isPaused: false
+  isPaused: false,
+  userGoal: "",
+  userName: "",
+  goalPromptDismissed: false,
+  goalSetAt: null,
+  motivationPhotoDataUrl: null
 };
 
 function normalizeText(value) {
@@ -252,6 +273,23 @@ function normalizeText(value) {
 
 function pickRandom(list) {
   return list[Math.floor(Math.random() * list.length)];
+}
+
+function escapeHtml(text) {
+  return String(text)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+/** Pause headline: personalized when userName is set in the popup. */
+function formatPauseHeadline(userName) {
+  const trimmed = userName && String(userName).trim();
+  if (trimmed) {
+    return `${escapeHtml(trimmed)}, do you really <em>need</em> this?`;
+  }
+  return `Do you really <em>need</em> this?`;
 }
 
 function formatHostname(hostname) {
@@ -273,6 +311,65 @@ function sendRuntimeMessage(message) {
   }
 }
 
+async function getMotivationPhotoDataUrlFromStorage() {
+  try {
+    const stored = await chrome.storage.local.get("dilly-state");
+    const raw = stored?.["dilly-state"]?.settings?.motivationPhotoDataUrl;
+    const s = raw && String(raw).trim();
+    if (s && /^data:image\//i.test(s)) {
+      return s;
+    }
+  } catch (error) {
+    console.warn("[Dilly] motivation photo read failed:", error);
+  }
+  return null;
+}
+
+/**
+ * Prefer storage so large data URLs are always current (get-state payloads can omit huge fields).
+ */
+async function resolveMotivationPhotoDataUrl(settings) {
+  const fromStorage = await getMotivationPhotoDataUrlFromStorage();
+  if (fromStorage) {
+    return fromStorage;
+  }
+  const s = settings.motivationPhotoDataUrl && String(settings.motivationPhotoDataUrl).trim();
+  if (s && /^data:image\//i.test(s)) {
+    return s;
+  }
+  return null;
+}
+
+/** Prefer storage so the pause headline matches the popup even if messaging returns stale settings. */
+async function resolveUserName(settings) {
+  try {
+    const stored = await chrome.storage.local.get("dilly-state");
+    const raw = stored?.["dilly-state"]?.settings?.userName;
+    const fromStorage = raw != null ? String(raw).trim() : "";
+    if (fromStorage) {
+      return fromStorage;
+    }
+  } catch (error) {
+    console.warn("[Dilly] userName read failed:", error);
+  }
+  const fallback = settings?.userName && String(settings.userName).trim();
+  return fallback || null;
+}
+
+function applyMotivationPhotoCircleStyles(wrap, img) {
+  if (!wrap || !img) {
+    return;
+  }
+  img.style.setProperty("display", "block", "important");
+  img.style.setProperty("width", "100%", "important");
+  img.style.setProperty("height", "100%", "important");
+  img.style.setProperty("max-width", "none", "important");
+  img.style.setProperty("max-height", "none", "important");
+  img.style.setProperty("object-fit", "cover", "important");
+  img.style.setProperty("object-position", "center", "important");
+  img.style.setProperty("border-radius", "50%", "important");
+}
+
 async function getState() {
   const response = await sendRuntimeMessage({ action: "get-state" });
   if (response?.ok) {
@@ -287,15 +384,23 @@ async function getState() {
       return null;
     }
 
+    const settings = {
+      ...DEFAULT_SETTINGS,
+      ...(parsed.settings || {})
+    };
+    const events = Array.isArray(parsed?.stats?.events) ? parsed.stats.events : [];
+    const goalProgress =
+      typeof globalThis.dillyComputeGoalProgress === "function"
+        ? globalThis.dillyComputeGoalProgress(events, settings)
+        : null;
+
     return {
-      settings: {
-        spendingThreshold: 30,
-        pauseDurationSeconds: 30,
-        intentionalMode: false,
-        isPaused: false,
-        ...(parsed.settings || {})
-      },
-      stats: parsed.stats || { events: [] }
+      settings,
+      stats: {
+        ...(parsed.stats || { events: [] }),
+        events,
+        goalProgress
+      }
     };
   } catch (error) {
     return null;
@@ -650,6 +755,111 @@ function maybeFixMisscaledPrice(p) {
   return p;
 }
 
+function extractCartTotal() {
+  const siteConfig = getSiteConfig();
+  const siteCartSelectors = siteConfig?.cartTotalSelectors || [];
+  const shopifyCartSelectors = isShopifyStore() ? SHOPIFY_CART_TOTAL_SELECTORS : [];
+  const selectors = [...siteCartSelectors, ...shopifyCartSelectors, ...CART_TOTAL_SELECTORS];
+
+  for (const selector of selectors) {
+    try {
+      const nodes = document.querySelectorAll(selector);
+      for (const node of nodes) {
+        if (!node.offsetParent && node.tagName !== "META") continue;
+
+        const text = (node.textContent || "").trim();
+        const price = parsePriceFromText(text);
+        if (price && price.value >= 1) {
+          console.warn("[Dilly] Cart total found via selector:", selector, price.display);
+          return price;
+        }
+
+        const dataVal = node.getAttribute("data-subtotal") ||
+                        node.getAttribute("data-cart-total") ||
+                        node.getAttribute("data-cart-subtotal") || "";
+        if (dataVal) {
+          let numVal = Number(dataVal.replace(/[^0-9.]/g, ""));
+          if (Number.isFinite(numVal) && numVal > 0) {
+            if (numVal > 10000 && !dataVal.includes(".")) numVal = numVal / 100;
+            if (numVal >= 1 && numVal < 100000) {
+              const result = { value: numVal, display: `$${numVal.toFixed(2)}` };
+              console.warn("[Dilly] Cart total found via data attr:", selector, result.display);
+              return result;
+            }
+          }
+        }
+      }
+    } catch (e) {
+      continue;
+    }
+  }
+
+  const TOTAL_LABELS = /\b(subtotal|cart\s*total|order\s*total|bag\s*total|estimated\s*total)\b/i;
+  try {
+    const candidates = document.querySelectorAll("span, div, p, td, th, dt, dd, strong, b");
+    for (const el of candidates) {
+      if (!el.offsetParent) continue;
+      const ownText = Array.from(el.childNodes)
+        .filter(n => n.nodeType === Node.TEXT_NODE)
+        .map(n => n.textContent)
+        .join("")
+        .trim();
+      if (!TOTAL_LABELS.test(ownText)) continue;
+
+      const row = el.closest("tr, div, li, dl, section") || el.parentElement;
+      if (!row) continue;
+      const rowText = row.textContent || "";
+      const price = parsePriceFromText(rowText.replace(ownText, ""));
+      if (price && price.value >= 1) {
+        console.warn("[Dilly] Cart total found via label scan:", ownText.trim(), price.display);
+        return price;
+      }
+    }
+  } catch (e) {
+    // fall through
+  }
+
+  return null;
+}
+
+function isCheckoutTrigger(trigger) {
+  if (!(trigger instanceof Element)) return false;
+
+  const text = normalizeText(
+    [trigger.textContent, trigger.getAttribute("aria-label"), trigger.getAttribute("value")].join(" ")
+  );
+
+  const CHECKOUT_KEYWORDS = [
+    "checkout", "check out", "buy now", "buy it now", "place order",
+    "complete order", "pay now", "secure checkout", "proceed to checkout",
+    "go to checkout", "continue to payment", "secure payment", "complete purchase"
+  ];
+
+  if (CHECKOUT_KEYWORDS.some(kw => text.includes(kw))) return true;
+
+  try {
+    const form = trigger.closest("form");
+    if (form) {
+      const action = (form.getAttribute("action") || "").toLowerCase();
+      if (/checkout|payment|order/.test(action)) return true;
+    }
+  } catch (e) {
+    // fall through
+  }
+
+  try {
+    const href = trigger.getAttribute("href") || "";
+    if (/checkout|cart|payment/i.test(href)) return true;
+  } catch (e) {
+    // fall through
+  }
+
+  const isOnCartPage = /\/(cart|bag|basket|checkout)\b/i.test(window.location.pathname);
+  if (isOnCartPage) return true;
+
+  return false;
+}
+
 function getContainerCandidates(trigger) {
   const candidates = [];
   let current = trigger;
@@ -706,6 +916,63 @@ function extractPrice(trigger) {
   return extractPriceFromPage();
 }
 
+/**
+ * Price only from the trigger's ancestors (and its form), not whole-page / main —
+ * used to tell newsletter "Subscribe" from a priced subscription or cart CTA.
+ */
+function extractPriceNearTrigger(trigger) {
+  if (!(trigger instanceof Element)) {
+    return null;
+  }
+
+  const siteConfig = getSiteConfig();
+  const selectors = [...(siteConfig?.priceSelectors || []), ...GENERIC_PRICE_SELECTORS];
+  const containers = [];
+  let current = trigger;
+  let depth = 0;
+
+  while (current && depth < 8) {
+    if (current === document.body || current === document.documentElement) {
+      break;
+    }
+    containers.push(current);
+    current = current.parentElement;
+    depth += 1;
+  }
+
+  const form = trigger.closest("form");
+  if (form && !containers.includes(form)) {
+    containers.push(form);
+  }
+
+  for (const container of containers) {
+    for (const selector of selectors) {
+      try {
+        const node = container.querySelector(selector);
+        if (!node) {
+          continue;
+        }
+        const parsed = parsePriceFromText(node.textContent || node.getAttribute("content"));
+        if (parsed) {
+          return parsed;
+        }
+      } catch (error) {
+        continue;
+      }
+    }
+
+    const containerText = container.textContent || "";
+    if (!isNoisyPriceText(containerText)) {
+      const fallback = parsePriceFromText(containerText);
+      if (fallback) {
+        return fallback;
+      }
+    }
+  }
+
+  return null;
+}
+
 function stopEvent(event) {
   event.preventDefault();
   event.stopPropagation();
@@ -755,7 +1022,18 @@ function removeOverlay() {
   }
 }
 
-function mountOverlay({ siteName, price, stats, pauseSeconds, onConfirm, onDismiss }) {
+function mountOverlay({
+  siteName,
+  price,
+  stats,
+  pauseSeconds,
+  onConfirm,
+  onDismiss,
+  userGoal,
+  goalProgress,
+  motivationPhotoDataUrl,
+  userName
+}) {
   removeOverlay();
 
   const root = document.createElement("div");
@@ -765,24 +1043,35 @@ function mountOverlay({ siteName, price, stats, pauseSeconds, onConfirm, onDismi
     <div class="dilly-overlay-dialog" role="dialog" aria-modal="true" aria-labelledby="dilly-headline">
       <div class="dilly-overlay-card">
         <button type="button" class="dilly-overlay-close" data-dismiss-x aria-label="Close">\u00d7</button>
-        <p class="dilly-overlay-site">${siteName}</p>
-        <h2 id="dilly-headline" class="dilly-overlay-headline">${pickRandom(HEADLINES)}</h2>
-        <p class="dilly-overlay-copy">${pickRandom(SUPPORT_LINES)}</p>
-        <div class="dilly-overlay-meta">
-          <span class="dilly-overlay-pill">${price ? price.display : "Price not detected"}</span>
-          <span class="dilly-overlay-pill">Take a beat</span>
-        </div>
 
-        <div class="dilly-timer-section">
-          <p class="dilly-timer-label">A little pause first</p>
-          <p class="dilly-progress-text" data-progress-intro>${pauseSeconds === 60 ? "1 minute" : `${pauseSeconds} seconds`} before "Yes, add it" unlocks.</p>
-          <div class="dilly-progress-track" aria-hidden="true">
-            <div class="dilly-progress-fill"></div>
+        <p class="dilly-overlay-brand">Dilly</p>
+        <div class="dilly-overlay-hero">
+          <h2 id="dilly-headline" class="dilly-overlay-headline">${formatPauseHeadline(userName)}</h2>
+          <div class="dilly-overlay-photo-stack" data-motivation-photo-wrap hidden>
+            <div class="dilly-overlay-motivation-wrap">
+              <img class="dilly-overlay-motivation-img" alt="" data-motivation-photo loading="eager" decoding="async" />
+            </div>
           </div>
-          <p class="dilly-progress-text" data-progress-status><span data-countdown>${pauseSeconds}</span> seconds left</p>
         </div>
 
-        <p class="dilly-overlay-stat">${formatStatLine(stats)}</p>
+        <div class="dilly-overlay-goal-pill" data-user-goal-wrap hidden>
+          <span class="dilly-overlay-goal-label">Your goal</span>
+          <p class="dilly-overlay-goal-text" data-user-goal></p>
+        </div>
+
+        <div class="dilly-overlay-body">
+          <div class="dilly-overlay-item-info">
+            <span class="dilly-overlay-site-name">${siteName}</span>
+            <span class="dilly-overlay-price">${price ? price.display : ""}</span>
+          </div>
+          <p class="dilly-overlay-reminder">Save here, spend intentionally on what you really love.</p>
+          <div class="dilly-overlay-timer-row">
+            <div class="dilly-progress-track" aria-hidden="true">
+              <div class="dilly-progress-fill" style="width:100%"></div>
+            </div>
+            <span class="dilly-overlay-timer-text" data-countdown>${pauseSeconds}s</span>
+          </div>
+        </div>
 
         <div class="dilly-overlay-actions">
           <button type="button" class="dilly-button dilly-button-primary" data-dismiss>Not today</button>
@@ -799,13 +1088,37 @@ function mountOverlay({ siteName, price, stats, pauseSeconds, onConfirm, onDismi
   document.documentElement.appendChild(root);
   activeOverlay = root;
 
+  const photoWrap = root.querySelector("[data-motivation-photo-wrap]");
+  const photoImg = root.querySelector("[data-motivation-photo]");
+  const photoUrl = motivationPhotoDataUrl && String(motivationPhotoDataUrl).trim();
+  if (photoUrl && photoWrap && photoImg) {
+    applyMotivationPhotoCircleStyles(photoWrap, photoImg);
+    photoImg.onerror = function onMotivationPhotoError() {
+      this.onerror = null;
+      if (photoWrap) {
+        photoWrap.hidden = true;
+      }
+    };
+    photoImg.onload = () => {
+      applyMotivationPhotoCircleStyles(photoWrap, photoImg);
+    };
+    photoImg.src = photoUrl;
+    photoWrap.hidden = false;
+  }
+
+  const goalWrap = root.querySelector("[data-user-goal-wrap]");
+  const goalNode = root.querySelector("[data-user-goal]");
+  const trimmedGoal = userGoal && String(userGoal).trim();
+  if (trimmedGoal && goalWrap && goalNode) {
+    goalNode.textContent = trimmedGoal;
+    goalWrap.hidden = false;
+  }
+
   const confirmButton = root.querySelector("[data-confirm]");
   const dismissButton = root.querySelector("[data-dismiss]");
   const progressFill = root.querySelector(".dilly-progress-fill");
   const countdownNode = root.querySelector("[data-countdown]");
-  const progressText = root.querySelector("[data-progress-status]");
   const headline = root.querySelector(".dilly-overlay-headline");
-  const copy = root.querySelector(".dilly-overlay-copy");
 
   let totalSeconds = pauseSeconds;
   let endTime = 0;
@@ -821,35 +1134,44 @@ function mountOverlay({ siteName, price, stats, pauseSeconds, onConfirm, onDismi
   function finishTimer() {
     confirmButton.disabled = false;
     progressFill.style.width = "0%";
-    countdownNode.textContent = "0";
-    progressText.textContent = "You can choose either path now.";
+    countdownNode.textContent = "done";
     stopTimer();
   }
 
   function startTimer() {
-    endTime = Date.now() + totalSeconds * 1000;
-    confirmButton.disabled = true;
-    headline.textContent = pickRandom(HEADLINES);
-    copy.textContent = pickRandom(SUPPORT_LINES);
+    void (async () => {
+      endTime = Date.now() + totalSeconds * 1000;
+      confirmButton.disabled = true;
+      const freshName = await resolveUserName({ userName });
+      headline.innerHTML = formatPauseHeadline(freshName);
 
-    stopTimer();
+      stopTimer();
 
-    const tick = () => {
-      const remainingMs = Math.max(0, endTime - Date.now());
-      const remainingSeconds = Math.ceil(remainingMs / 1000);
-      const progressRatio = remainingMs / (totalSeconds * 1000);
+      const tick = () => {
+        const remainingMs = Math.max(0, endTime - Date.now());
+        const remainingSeconds = Math.ceil(remainingMs / 1000);
+        const remainingRatio = remainingMs / (totalSeconds * 1000);
 
-      countdownNode.textContent = String(remainingSeconds);
-      progressFill.style.width = `${Math.max(0, progressRatio) * 100}%`;
-      progressText.textContent = `${remainingSeconds} second${remainingSeconds === 1 ? "" : "s"} left`;
+        countdownNode.textContent = `${remainingSeconds}s`;
+        progressFill.style.width = `${Math.max(0, remainingRatio) * 100}%`;
 
-      if (remainingMs <= 0) {
-        finishTimer();
+        if (remainingMs <= 0) {
+          finishTimer();
+        }
+      };
+
+      tick();
+      timerId = window.setInterval(tick, 120);
+    })();
+  }
+
+  function refreshPauseHeadlineFromStorage() {
+    return resolveUserName({ userName }).then((n) => {
+      const h = root.querySelector(".dilly-overlay-headline");
+      if (h) {
+        h.innerHTML = formatPauseHeadline(n);
       }
-    };
-
-    tick();
-    timerId = window.setInterval(tick, 120);
+    });
   }
 
   const closeX = root.querySelector("[data-dismiss-x]");
@@ -873,6 +1195,11 @@ function mountOverlay({ siteName, price, stats, pauseSeconds, onConfirm, onDismi
     stopTimer();
     await onConfirm();
   });
+
+  void refreshPauseHeadlineFromStorage();
+  window.setTimeout(() => {
+    void refreshPauseHeadlineFromStorage();
+  }, 150);
 
   startTimer();
 }
@@ -902,6 +1229,18 @@ async function maybeIntercept(event) {
   try {
     const price = getResolvedPrice(trigger);
     console.warn("[Dilly] Final price for overlay:", price ? `${price.display} (value=${price.value})` : "NONE");
+
+    const localPrice = extractPriceNearTrigger(trigger);
+    const subscribeLabel = normalizeText(`${getShortSignature(trigger)} ${getTextSignature(trigger)}`);
+    if (
+      typeof globalThis.subscribeIntentBypassesPause === "function" &&
+      globalThis.subscribeIntentBypassesPause(subscribeLabel, Boolean(localPrice))
+    ) {
+      console.warn("[Dilly] Subscribe without local price — skipping pause.");
+      replayOriginalAction(trigger);
+      return;
+    }
+
     const state = await getState();
     const settings = {
       ...DEFAULT_SETTINGS,
@@ -928,15 +1267,24 @@ async function maybeIntercept(event) {
 
     const shownSnapshot = await recordEvent("shown", siteName, price?.value ?? null, productKey);
 
+    const motivationPhotoDataUrl = await resolveMotivationPhotoDataUrl(settings);
+    const resolvedUserName = await resolveUserName(settings);
+
     mountOverlay({
       siteName,
       price,
       stats: shownSnapshot?.stats || state?.stats,
       pauseSeconds,
+      userGoal: String(settings.userGoal || "").trim() || null,
+      goalProgress: state?.stats?.goalProgress || null,
+      motivationPhotoDataUrl,
+      userName: resolvedUserName,
       onConfirm: async () => {
         removeOverlay();
+        networkInterceptActive = true;
         await recordEvent("confirmed", siteName, price?.value ?? null, productKey);
         replayOriginalAction(trigger);
+        window.setTimeout(() => { networkInterceptActive = false; }, 3000);
       },
       onDismiss: async (root) => {
         const card = root.querySelector(".dilly-overlay-card");
@@ -956,7 +1304,9 @@ async function maybeIntercept(event) {
     });
   } catch (error) {
     console.warn("[Dilly] maybeIntercept failed after stopEvent, replaying action:", error);
+    networkInterceptActive = true;
     replayOriginalAction(trigger);
+    window.setTimeout(() => { networkInterceptActive = false; }, 3000);
   }
 }
 
@@ -1089,11 +1439,18 @@ async function handleCartRequest(event) {
 
   const shownSnapshot = await recordEvent("shown", siteName, price?.value ?? null, productKey);
 
+  const motivationPhotoDataUrl = await resolveMotivationPhotoDataUrl(settings);
+  const resolvedUserName = await resolveUserName(settings);
+
   mountOverlay({
     siteName,
     price,
     stats: shownSnapshot?.stats || state?.stats,
     pauseSeconds,
+    userGoal: String(settings.userGoal || "").trim() || null,
+    goalProgress: state?.stats?.goalProgress || null,
+    motivationPhotoDataUrl,
+    userName: resolvedUserName,
     onConfirm: async () => {
       removeOverlay();
       await recordEvent("confirmed", siteName, price?.value ?? null, productKey);
@@ -1453,6 +1810,15 @@ async function prefetchPrice() {
 prefetchPrice();
 
 function getResolvedPrice(trigger) {
+  if (isCheckoutTrigger(trigger)) {
+    const cartTotal = extractCartTotal();
+    if (cartTotal) {
+      console.warn("[Dilly] Using cart total:", cartTotal.display);
+      return cartTotal;
+    }
+    console.warn("[Dilly] Checkout trigger detected but no cart total found, falling back to item price");
+  }
+
   const domPrice = maybeFixMisscaledPrice(extractPrice(trigger));
   console.warn("[Dilly] DOM price:", domPrice ? domPrice.display : "null");
 
@@ -1582,71 +1948,78 @@ async function openSettingsOverlay() {
     const pausedWeek = st.pausedThisWeek || 0;
     const notToday = st.notTodayThisMonth || st.notTodayCount || 0;
     const yesAdd = st.yesThisMonth || st.yesAddCount || 0;
-    const curStreak = st.currentStreak || 0;
-    const bestStreak = st.bestStreak || 0;
     const summary = st.summaryLine || (pausedWeek > 0 ? `You've paused ${pausedWeek} purchase${pausedWeek === 1 ? "" : "s"} this week.` : "Every small pause counts.");
 
     const root = document.createElement("div");
     root.id = DILLY_SETTINGS_ID;
     root.style.cssText = "position:fixed;inset:0;z-index:2147483647;font-family:var(--dilly-sans);-webkit-font-smoothing:antialiased;";
+    const pauseDur = s.pauseDurationSeconds || 30;
     root.innerHTML = `
       <div class="dilly-overlay-backdrop"></div>
       <div class="dilly-overlay-dialog" role="dialog" aria-modal="true">
         <div class="dilly-overlay-card dilly-popup-sheet">
           <button type="button" class="dilly-overlay-close" data-stx aria-label="Close">\u00d7</button>
 
-          <header>
-            <div class="dilly-brand">
-              <img class="dilly-brand-mark" src="${chrome.runtime.getURL("icons/icon48.png")}" width="44" height="44" alt="" />
-            </div>
-            <h2 class="dilly-popup-title">Spend with a little more intention.</h2>
-            <p class="dilly-popup-subtitle">Gentle pauses, local-only stats, and zero guilt.</p>
+          <header style="text-align:center;">
+            <p class="dilly-popup-brand">Dilly</p>
+            <h2 class="dilly-popup-title dilly-popup-title--hero"><span class="dilly-popup-title-line">Be more intentional</span><span class="dilly-popup-title-line">with what you spend on.</span></h2>
           </header>
 
+          <div id="ds-motivation-slot"></div>
+
           <section class="dilly-settings-group">
-            <div class="dilly-setting-row">
-              <div><p class="dilly-setting-label">Intentional Mode</p><p class="dilly-setting-help">Pause every add-to-cart moment.</p></div>
-              <label class="dilly-switch"><input id="ds-intentional" type="checkbox" ${s.intentionalMode ? "checked" : ""}/><span class="dilly-switch-track"></span></label>
-            </div>
-            <div class="dilly-setting-row dilly-setting-row-start">
-              <div><p class="dilly-setting-label">Spending threshold</p><p class="dilly-setting-help">Only pause above this amount.</p></div>
-              <label class="dilly-threshold-input-wrap"><span class="dilly-threshold-prefix">$</span><input id="ds-threshold" class="dilly-threshold-input" type="number" min="0" step="1" value="${s.spendingThreshold || 30}" ${s.intentionalMode ? "disabled" : ""}/></label>
-            </div>
-            <div>
-              <p class="dilly-setting-label">Pause length</p>
-              <p class="dilly-setting-help">How long before "Yes, add it" unlocks.</p>
-              <div id="ds-pause-opts" class="dilly-timer-options">
-                <button type="button" class="dilly-timer-chip ${s.pauseDurationSeconds === 10 ? "is-active" : ""}" data-sec="10">10s</button>
-                <button type="button" class="dilly-timer-chip ${(s.pauseDurationSeconds || 30) === 30 ? "is-active" : ""}" data-sec="30">30s</button>
-                <button type="button" class="dilly-timer-chip ${s.pauseDurationSeconds === 60 ? "is-active" : ""}" data-sec="60">1 min</button>
+            <div class="dilly-setting-stack">
+              <div class="dilly-pause-header">
+                <p class="dilly-setting-label">Show Dilly</p>
+                <label class="dilly-threshold-input-wrap dilly-threshold-inline" id="ds-threshold-wrap" ${s.intentionalMode ? "hidden" : ""}>
+                  <span class="dilly-threshold-prefix">$</span>
+                  <input id="ds-threshold" class="dilly-threshold-input" type="number" min="0" step="1" value="${s.spendingThreshold || 30}" ${s.intentionalMode ? "disabled" : ""} />
+                </label>
+              </div>
+              <input id="ds-intentional" type="checkbox" style="display:none" ${s.intentionalMode ? "checked" : ""} />
+              <div class="dilly-seg-control">
+                <button type="button" class="dilly-seg-btn ${s.intentionalMode ? "is-active" : ""}" data-mode="every">Every cart</button>
+                <button type="button" class="dilly-seg-btn ${!s.intentionalMode ? "is-active" : ""}" data-mode="above">Only above</button>
               </div>
             </div>
-            <div class="dilly-setting-row">
-              <div><p class="dilly-setting-label">Pause Dilly</p><p class="dilly-setting-help">Shop without interruptions.</p></div>
-              <label class="dilly-switch"><input id="ds-paused" type="checkbox" ${s.isPaused ? "checked" : ""}/><span class="dilly-switch-track"></span></label>
+            <div class="dilly-setting-stack">
+              <p class="dilly-setting-label">Pause length</p>
+              <div id="ds-pause-opts" class="dilly-timer-options">
+                <button type="button" class="dilly-timer-chip ${pauseDur === 10 ? "is-active" : ""}" data-sec="10">10s</button>
+                <button type="button" class="dilly-timer-chip ${pauseDur === 30 ? "is-active" : ""}" data-sec="30">30s</button>
+                <button type="button" class="dilly-timer-chip ${pauseDur === 60 ? "is-active" : ""}" data-sec="60">1m</button>
+              </div>
             </div>
           </section>
 
           <section class="dilly-stats-panel">
             <div class="dilly-stats-header">
-              <p class="dilly-setting-label">Your quiet wins</p>
+              <p class="dilly-setting-label">Wins</p>
               <p class="dilly-inline-note">${summary}</p>
             </div>
             <div class="dilly-stats-grid">
-              <article class="dilly-stat-card"><p class="dilly-stat-value">${pausedWeek}</p><p class="dilly-stat-label">Paused this week</p></article>
+              <article class="dilly-stat-card"><p class="dilly-stat-value">${pausedWeek}</p><p class="dilly-stat-label">This week</p></article>
               <article class="dilly-stat-card"><p class="dilly-stat-value">${notToday}</p><p class="dilly-stat-label">Not today</p></article>
-              <article class="dilly-stat-card"><p class="dilly-stat-value">${yesAdd}</p><p class="dilly-stat-label">Yes, add it</p></article>
-              <article class="dilly-stat-card"><p class="dilly-stat-value">${curStreak}</p><p class="dilly-stat-label">Current streak</p></article>
-              <article class="dilly-stat-card"><p class="dilly-stat-value">${bestStreak}</p><p class="dilly-stat-label">Best streak</p></article>
+              <article class="dilly-stat-card"><p class="dilly-stat-value">${yesAdd}</p><p class="dilly-stat-label">Added</p></article>
             </div>
           </section>
 
-          <p class="dilly-popup-footer-note">Everything stays on this device. No accounts, no sync, no tracking.</p>
+          <p class="dilly-popup-footer-note">On this device only.</p>
         </div>
       </div>
     `;
 
     root.addEventListener("click", (ev) => ev.stopPropagation());
+
+    const motivationSlot = root.querySelector("#ds-motivation-slot");
+    if (motivationSlot && s.motivationPhotoDataUrl) {
+      motivationSlot.innerHTML =
+        '<div class="dilly-overlay-motivation-wrap" style="box-sizing:border-box;margin:12px auto 14px;width:72px;height:72px;max-width:72px;max-height:72px;min-width:72px;min-height:72px;aspect-ratio:1;border-radius:50%;overflow:hidden;flex-shrink:0;border:2px solid rgba(92,61,46,0.14);box-shadow:0 4px 16px rgba(44,24,16,0.12);"><img class="dilly-overlay-motivation-img" alt="" style="box-sizing:border-box;display:block;width:100%;height:100%;object-fit:cover;object-position:center;" /></div><p class="dilly-inline-note" style="text-align:center;margin:0 0 12px;">Change in the Dilly popup.</p>';
+      const motivationImg = motivationSlot.querySelector("img");
+      if (motivationImg) {
+        motivationImg.src = s.motivationPhotoDataUrl;
+      }
+    }
 
     const dismiss = () => {
       const card = root.querySelector(".dilly-overlay-card");
@@ -1661,23 +2034,29 @@ async function openSettingsOverlay() {
       sendRuntimeMessage({ action: "update-settings", patch });
     }
 
-    root.querySelector("#ds-intentional").addEventListener("change", (ev) => {
-      const on = ev.target.checked;
-      savePatch({ intentionalMode: on });
-      root.querySelector("#ds-threshold").disabled = on;
+    root.querySelectorAll(".dilly-seg-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const isEvery = btn.dataset.mode === "every";
+        savePatch({ intentionalMode: isEvery });
+        root.querySelectorAll(".dilly-seg-btn").forEach(b => b.classList.toggle("is-active", b === btn));
+        const thresholdWrap = root.querySelector("#ds-threshold-wrap");
+        const thresholdInput = root.querySelector("#ds-threshold");
+        if (thresholdWrap) thresholdWrap.hidden = isEvery;
+        if (thresholdInput) thresholdInput.disabled = isEvery;
+      });
     });
-    root.querySelector("#ds-threshold").addEventListener("change", (ev) => {
-      savePatch({ spendingThreshold: Math.max(0, Number(ev.target.value) || 0) });
-    });
+    const dsThreshold = root.querySelector("#ds-threshold");
+    if (dsThreshold) {
+      dsThreshold.addEventListener("change", (ev) => {
+        savePatch({ spendingThreshold: Math.max(0, Number(ev.target.value) || 0) });
+      });
+    }
     root.querySelector("#ds-pause-opts").addEventListener("click", (ev) => {
       const btn = ev.target.closest("[data-sec]");
       if (!btn) return;
       const val = Number(btn.dataset.sec);
       savePatch({ pauseDurationSeconds: val });
       root.querySelectorAll("[data-sec]").forEach(b => b.classList.toggle("is-active", Number(b.dataset.sec) === val));
-    });
-    root.querySelector("#ds-paused").addEventListener("change", (ev) => {
-      savePatch({ isPaused: ev.target.checked });
     });
 
     document.documentElement.appendChild(root);
@@ -1705,7 +2084,7 @@ function mountSideTab() {
   const tab = document.createElement("button");
   tab.id = DILLY_SIDE_TAB_ID;
   tab.setAttribute("aria-label", "Dilly — intentional spending");
-  tab.innerHTML = `<span>dilly</span>`;
+  tab.innerHTML = `<span>Dilly</span>`;
 
   tab.addEventListener("click", (e) => {
     e.stopPropagation();

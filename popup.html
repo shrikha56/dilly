@@ -10,37 +10,113 @@
     <main class="dilly-popup-shell">
       <section class="dilly-popup-card">
         <div class="dilly-popup-header">
-          <div class="dilly-brand">
-            <img class="dilly-brand-mark" src="icons/icon48.png" width="44" height="44" alt="" />
-          </div>
-          <h1 class="dilly-popup-title">Spend with a little more intention.</h1>
-          <p class="dilly-popup-subtitle">
-            Gentle pauses, local-only stats, and zero guilt.
-          </p>
+          <p class="dilly-popup-brand">Dilly</p>
+          <h1 class="dilly-popup-title dilly-popup-title--hero">
+            <span class="dilly-popup-title-line">Be more intentional</span>
+            <span class="dilly-popup-title-line">with what you spend on.</span>
+          </h1>
         </div>
 
-        <section class="dilly-settings-group">
-          <div class="dilly-setting-row">
-            <div>
-              <p class="dilly-setting-label">Intentional Mode</p>
-              <p class="dilly-setting-help">Pause every add-to-cart moment.</p>
+        <div class="dilly-goal-card dilly-name-card">
+          <div class="dilly-name-header">
+            <p class="dilly-goal-heading">Name</p>
+            <button type="button" id="editNameBtn" class="dilly-goal-link" hidden>Edit</button>
+          </div>
+          <p id="userNameDisplay" class="dilly-goal-display dilly-name-display" hidden></p>
+          <input
+            type="text"
+            id="userNameInput"
+            class="dilly-user-name-input"
+            maxlength="48"
+            placeholder="e.g. Alex"
+            autocomplete="given-name"
+          />
+        </div>
+
+        <section id="goalSection" class="dilly-goal-section" aria-label="Your goal">
+          <div id="goalBlockFull" class="dilly-goal-card dilly-goal-card--onboarding" hidden>
+            <p class="dilly-goal-heading">Your goal</p>
+            <label class="dilly-goal-field-label" for="userGoalInput">Goal</label>
+            <textarea
+              id="userGoalInput"
+              class="dilly-goal-textarea"
+              rows="2"
+              maxlength="280"
+              placeholder="One line is enough."
+            ></textarea>
+            <div class="dilly-goal-actions">
+              <button type="button" id="saveGoalBtn" class="dilly-goal-btn dilly-goal-btn-primary">Save</button>
+              <button type="button" id="skipGoalBtn" class="dilly-goal-btn dilly-goal-btn-ghost">Skip</button>
             </div>
-            <label class="dilly-switch">
-              <input id="intentionalMode" type="checkbox" />
-              <span class="dilly-switch-track"></span>
-            </label>
+          </div>
+
+          <div id="goalBlockCompact" class="dilly-goal-card dilly-goal-card--compact" hidden>
+            <p class="dilly-goal-heading">Goal</p>
+            <button type="button" id="openGoalEditorBtn" class="dilly-goal-link">Add a goal</button>
+          </div>
+
+          <div id="goalBlockSet" class="dilly-goal-card dilly-goal-card--set" hidden>
+            <p class="dilly-goal-heading">Goal</p>
+            <p id="userGoalDisplay" class="dilly-goal-display"></p>
+            <button type="button" id="editGoalBtn" class="dilly-goal-link">Edit</button>
+          </div>
+
+          <div id="goalEditor" class="dilly-goal-card" hidden>
+            <p id="goalEditorTitle" class="dilly-goal-heading">Goal</p>
+            <label class="dilly-goal-field-label" for="userGoalEditInput">Goal</label>
+            <textarea id="userGoalEditInput" class="dilly-goal-textarea" rows="2" maxlength="280"></textarea>
+            <div class="dilly-goal-actions">
+              <button type="button" id="confirmGoalEditBtn" class="dilly-goal-btn dilly-goal-btn-primary">Save</button>
+              <button type="button" id="cancelGoalEditBtn" class="dilly-goal-btn dilly-goal-btn-ghost">Cancel</button>
+            </div>
+          </div>
+        </section>
+
+        <section id="goalProgressSection" class="dilly-goal-progress" hidden aria-label="Progress">
+          <p class="dilly-goal-progress-kicker">Progress</p>
+          <div class="dilly-goal-progress-grid">
+            <article class="dilly-goal-progress-stat">
+              <p class="dilly-goal-progress-value" id="goalProgressNotToday">0</p>
+              <p class="dilly-goal-progress-label">Walked away</p>
+            </article>
+            <article class="dilly-goal-progress-stat">
+              <p class="dilly-goal-progress-value" id="goalProgressDays">0</p>
+              <p class="dilly-goal-progress-label">Days paused</p>
+            </article>
+            <article class="dilly-goal-progress-stat">
+              <p class="dilly-goal-progress-value" id="goalProgressYes">0</p>
+              <p class="dilly-goal-progress-label">Still added</p>
+            </article>
+          </div>
+          <p id="goalProgressHint" class="dilly-goal-progress-hint"></p>
+        </section>
+
+        <section class="dilly-settings-group" aria-label="Settings">
+          <div class="dilly-motivation-photo">
+            <p class="dilly-setting-label">Motivation photo</p>
+            <div class="dilly-motivation-photo-frame dilly-motivation-photo-frame--small">
+              <img id="motivationPhotoPreview" class="dilly-motivation-photo-img" alt="" width="280" height="80" hidden />
+              <span id="motivationPhotoEmpty" class="dilly-motivation-photo-empty">Add a photo</span>
+            </div>
+            <div class="dilly-motivation-photo-actions dilly-motivation-photo-actions--pills">
+              <label for="motivationPhotoInput" class="dilly-pill-btn">Choose</label>
+              <input type="file" id="motivationPhotoInput" accept="image/*" class="dilly-hidden-input" />
+              <button type="button" id="removeMotivationPhotoBtn" class="dilly-pill-btn dilly-pill-btn--ghost" hidden>Remove</button>
+            </div>
           </div>
 
           <div class="dilly-setting-stack">
-            <div class="dilly-setting-row dilly-setting-row-start">
-              <div>
-                <p class="dilly-setting-label">Spending threshold</p>
-                <p class="dilly-setting-help">Only pause purchases above this amount.</p>
-              </div>
-              <label class="dilly-threshold-input-wrap">
+            <input id="intentionalMode" type="checkbox" class="dilly-hidden-input" />
+            <div class="dilly-pause-header">
+              <p class="dilly-setting-label">Show Dilly pop-up</p>
+              <label class="dilly-threshold-input-wrap dilly-threshold-inline" id="thresholdRow" hidden>
                 <span class="dilly-threshold-prefix">$</span>
                 <input id="spendingThreshold" class="dilly-threshold-input" type="number" min="0" step="1" />
               </label>
+            </div>
+            <div class="dilly-seg-control">
+              <button type="button" class="dilly-seg-btn" data-mode="every">Every cart</button>
+              <button type="button" class="dilly-seg-btn" data-mode="above">Only above</button>
             </div>
             <p id="thresholdNote" class="dilly-inline-note"></p>
           </div>
@@ -48,37 +124,26 @@
           <div class="dilly-setting-stack">
             <div>
               <p class="dilly-setting-label">Pause length</p>
-              <p class="dilly-setting-help">How long before "Yes, add it" unlocks.</p>
             </div>
             <div id="pauseDurationOptions" class="dilly-timer-options">
               <button type="button" class="dilly-timer-chip" data-seconds="10">10s</button>
               <button type="button" class="dilly-timer-chip" data-seconds="30">30s</button>
-              <button type="button" class="dilly-timer-chip" data-seconds="60">1 min</button>
+              <button type="button" class="dilly-timer-chip" data-seconds="60">1m</button>
             </div>
           </div>
 
-          <div class="dilly-setting-row">
-            <div>
-              <p class="dilly-setting-label">Pause Dilly</p>
-              <p class="dilly-setting-help">Shop without interruptions.</p>
-            </div>
-            <label class="dilly-switch">
-              <input id="isPaused" type="checkbox" />
-              <span class="dilly-switch-track"></span>
-            </label>
-          </div>
         </section>
 
         <section class="dilly-stats-panel">
           <div class="dilly-stats-header">
-            <p class="dilly-setting-label">Your quiet wins</p>
+            <p class="dilly-setting-label">Wins</p>
             <p id="summaryLine" class="dilly-inline-note"></p>
           </div>
 
           <div class="dilly-stats-grid">
             <article class="dilly-stat-card">
               <p class="dilly-stat-value" id="pausedThisWeek">0</p>
-              <p class="dilly-stat-label">Paused this week</p>
+              <p class="dilly-stat-label">This week</p>
             </article>
             <article class="dilly-stat-card">
               <p class="dilly-stat-value" id="notTodayThisMonth">0</p>
@@ -86,25 +151,18 @@
             </article>
             <article class="dilly-stat-card">
               <p class="dilly-stat-value" id="yesThisMonth">0</p>
-              <p class="dilly-stat-label">Yes, add it</p>
-            </article>
-            <article class="dilly-stat-card">
-              <p class="dilly-stat-value" id="currentStreak">0</p>
-              <p class="dilly-stat-label">Current streak</p>
-            </article>
-            <article class="dilly-stat-card">
-              <p class="dilly-stat-value" id="bestStreak">0</p>
-              <p class="dilly-stat-label">Best streak</p>
+              <p class="dilly-stat-label">Added</p>
             </article>
           </div>
         </section>
 
         <footer class="dilly-popup-footer">
-          <p>Everything stays on this device. No accounts, no sync, no tracking.</p>
+          <p>On this device only.</p>
         </footer>
       </section>
     </main>
 
+    <script src="goal-progress.js"></script>
     <script src="popup.js"></script>
   </body>
 </html>

@@ -22,25 +22,62 @@
 }
 
 /* ─── POPUP (toolbar panel) ─── */
+/*
+  Chrome draws extension popups as a square window; border-radius on html/body
+  often does not clip. Use an inset “frame” (body padding) + rounded inner shell
+  so the card visibly has rounded corners.
+*/
+
+html {
+  margin: 0;
+  padding: 0;
+  background: #e8e2dc;
+}
 
 .dilly-popup-page {
   margin: 0;
-  min-width: 400px;
-  max-width: 420px;
-  background: linear-gradient(165deg, #fdfaf6 0%, var(--dilly-cream) 55%, #f6ebe2 100%);
+  padding: 10px;
+  box-sizing: border-box;
+  min-width: 420px;
+  max-width: 480px;
   color: var(--dilly-charcoal);
+  font-family: var(--dilly-sans);
+  -webkit-font-smoothing: antialiased;
+  background: #e8e2dc;
+}
+
+.dilly-popup-shell {
+  border-radius: var(--dilly-radius-xl);
+  overflow: hidden;
+  background: linear-gradient(165deg, #fdfaf6 0%, var(--dilly-cream) 55%, #f6ebe2 100%);
+  box-shadow:
+    0 0 0 1px rgba(92, 61, 46, 0.06),
+    0 8px 28px rgba(44, 24, 16, 0.08);
+  padding: 28px 26px 32px;
+  /* Same base stack as #dilly-overlay-root / #dilly-settings-root */
   font-family: var(--dilly-sans);
   -webkit-font-smoothing: antialiased;
 }
 
-.dilly-popup-shell {
-  padding: 28px 26px 32px;
+/* Toolbar popup: form controls often ignore body font — match overlay settings */
+.dilly-popup-page button,
+.dilly-popup-page input,
+.dilly-popup-page textarea,
+.dilly-popup-page select {
+  font-family: var(--dilly-sans);
+}
+
+.dilly-popup-page .dilly-settings-group,
+.dilly-popup-page .dilly-stats-panel,
+.dilly-popup-page .dilly-goal-section,
+.dilly-popup-page .dilly-goal-progress {
+  font-family: var(--dilly-sans);
 }
 
 .dilly-popup-card {
   display: flex;
   flex-direction: column;
-  gap: 26px;
+  gap: 14px;
 }
 
 /* brand mark (logo only) */
@@ -79,6 +116,16 @@
 .dilly-popup-header {
   padding-bottom: 0;
   border-bottom: none;
+  text-align: center;
+}
+
+.dilly-popup-brand {
+  margin: 0 0 10px;
+  font-family: "Snell Roundhand", "Snell Roundhand Script", cursive;
+  font-size: 22px;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  color: var(--dilly-brown-deep);
 }
 
 .dilly-popup-title {
@@ -91,12 +138,231 @@
   color: var(--dilly-charcoal);
 }
 
+.dilly-popup-title--hero {
+  font-size: clamp(1.55rem, 4.2vw, 1.95rem);
+  line-height: 1.14;
+  letter-spacing: -0.025em;
+  max-width: min(100%, 40ch);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.dilly-popup-title-line {
+  display: block;
+}
+
+.dilly-popup-title-line:last-child {
+  margin-top: 0.12em;
+  color: var(--dilly-brown-deep);
+}
+
 .dilly-popup-subtitle {
-  margin: 12px 0 0;
+  margin: 14px 0 0;
+  color: var(--dilly-brown-mid);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.45;
+  max-width: min(100%, 38ch);
+  margin-left: auto;
+  margin-right: auto;
+  letter-spacing: 0.01em;
+}
+
+/* goal (first-run + reminder) */
+.dilly-goal-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.dilly-goal-card {
+  padding: 18px 18px 20px;
+  border: 1px solid var(--dilly-line);
+  border-radius: var(--dilly-radius-lg);
+  background: var(--dilly-surface);
+  box-shadow: var(--dilly-shadow-sm);
+}
+
+.dilly-goal-card--onboarding {
+  border-color: rgba(168, 107, 92, 0.22);
+  background: linear-gradient(165deg, rgba(255, 252, 248, 0.98) 0%, var(--dilly-surface) 100%);
+}
+
+.dilly-goal-card--compact {
+  padding: 14px 18px;
+}
+
+.dilly-goal-heading {
+  margin: 0 0 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--dilly-charcoal);
+}
+
+.dilly-goal-intro {
+  margin: 0 0 12px;
+  font-size: 12px;
+  line-height: 1.5;
   color: var(--dilly-ink);
+}
+
+.dilly-goal-field-label {
+  display: block;
+  margin: 0 0 6px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--dilly-brown-muted);
+}
+
+.dilly-goal-textarea {
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0 0 14px;
+  padding: 12px 14px;
+  border: 1px solid var(--dilly-line);
+  border-radius: 12px;
+  background: #fff;
+  color: var(--dilly-charcoal);
+  font-family: var(--dilly-sans);
   font-size: 14px;
-  line-height: 1.55;
-  max-width: 36ch;
+  line-height: 1.45;
+  resize: vertical;
+  min-height: 72px;
+}
+
+.dilly-goal-textarea::placeholder {
+  color: rgba(92, 61, 46, 0.38);
+}
+
+.dilly-goal-textarea:focus {
+  outline: none;
+  border-color: rgba(168, 107, 92, 0.45);
+  box-shadow: 0 0 0 3px rgba(168, 107, 92, 0.12);
+}
+
+.dilly-goal-display {
+  margin: 0 0 10px;
+  font-family: var(--dilly-serif);
+  font-size: 17px;
+  line-height: 1.4;
+  font-style: italic;
+  color: var(--dilly-brown-deep);
+}
+
+.dilly-goal-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.dilly-goal-btn {
+  font-family: var(--dilly-sans);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.dilly-goal-btn-primary {
+  background: var(--dilly-brown);
+  color: var(--dilly-cream);
+  box-shadow: 0 2px 8px rgba(44, 24, 16, 0.12);
+}
+
+.dilly-goal-btn-primary:hover {
+  background: var(--dilly-brown-deep);
+}
+
+.dilly-goal-btn-ghost {
+  background: transparent;
+  color: var(--dilly-brown-mid);
+  border: 1px solid var(--dilly-line);
+}
+
+.dilly-goal-btn-ghost:hover {
+  background: var(--dilly-brown-tint);
+  color: var(--dilly-charcoal);
+}
+
+.dilly-goal-link {
+  display: inline;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  font-family: var(--dilly-sans);
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--dilly-brown-mid);
+  text-align: left;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.dilly-goal-link:hover {
+  color: var(--dilly-brown-deep);
+}
+
+.dilly-goal-progress {
+  padding: 16px 18px 18px;
+  border: 1px solid var(--dilly-line);
+  border-radius: var(--dilly-radius-lg);
+  background: rgba(255, 255, 255, 0.65);
+  box-shadow: var(--dilly-shadow-sm);
+}
+
+.dilly-goal-progress-kicker {
+  margin: 0 0 12px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(92, 61, 46, 0.55);
+}
+
+.dilly-goal-progress-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.dilly-goal-progress-stat {
+  margin: 0;
+  padding: 10px 8px;
+  text-align: center;
+  border-radius: 12px;
+  background: rgba(251, 246, 240, 0.85);
+  border: 1px solid rgba(92, 61, 46, 0.06);
+}
+
+.dilly-goal-progress-value {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--dilly-charcoal);
+  line-height: 1.1;
+}
+
+.dilly-goal-progress-label {
+  margin: 6px 0 0;
+  font-size: 10px;
+  line-height: 1.35;
+  color: var(--dilly-ink);
+}
+
+.dilly-goal-progress-hint {
+  margin: 12px 0 0;
+  font-size: 11px;
+  line-height: 1.45;
+  color: rgba(92, 61, 46, 0.5);
 }
 
 /* settings */
@@ -134,6 +400,230 @@
   color: var(--dilly-charcoal);
 }
 
+.dilly-setting-help--tight {
+  margin-top: 2px !important;
+  max-width: 32ch;
+}
+
+.dilly-hidden-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.dilly-name-card {
+  padding: 14px 18px 16px;
+}
+
+.dilly-name-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.dilly-name-header .dilly-goal-heading {
+  margin: 0;
+}
+
+.dilly-name-header .dilly-goal-link {
+  margin: 0;
+}
+
+.dilly-name-card .dilly-goal-heading {
+  margin: 0 0 6px;
+}
+
+.dilly-name-display {
+  font-style: normal;
+  font-family: var(--dilly-sans);
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--dilly-charcoal);
+  margin: 0 0 6px;
+}
+
+.dilly-user-name-input[hidden] {
+  display: none !important;
+}
+
+.dilly-user-name-input {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--dilly-charcoal);
+  font-family: var(--dilly-sans);
+  font-size: 15px;
+  font-weight: 500;
+  text-align: left;
+}
+
+.dilly-user-name-input:focus {
+  outline: none;
+}
+
+.dilly-user-name-input::placeholder {
+  color: rgba(92, 61, 46, 0.35);
+}
+
+.dilly-motivation-photo {
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+
+.dilly-motivation-photo-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.dilly-motivation-photo-row .dilly-setting-label {
+  margin: 0;
+}
+
+.dilly-motivation-photo-actions--pills {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.dilly-pill-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 9px 24px;
+  border: none;
+  border-radius: 999px;
+  background: var(--dilly-brown);
+  color: var(--dilly-cream);
+  font-family: var(--dilly-sans);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 160ms ease;
+}
+
+.dilly-pill-btn:hover {
+  background: var(--dilly-brown-deep);
+}
+
+.dilly-pill-btn--ghost {
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  color: var(--dilly-brown);
+  font-size: 12px;
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.dilly-pill-btn--ghost:hover {
+  background: transparent;
+  color: var(--dilly-brown-deep);
+}
+
+.dilly-pill-btn--ghost[hidden] {
+  display: none !important;
+}
+
+.dilly-motivation-photo-frame--small {
+  margin-top: 8px;
+  max-width: 100%;
+  min-height: 60px;
+  aspect-ratio: 7 / 2;
+  border-radius: 10px;
+}
+
+.dilly-motivation-photo-frame {
+  position: relative;
+  margin: 12px auto 0;
+  width: 100%;
+  max-width: 280px;
+  min-height: 100px;
+  aspect-ratio: 7 / 4;
+  border-radius: 14px;
+  overflow: hidden;
+  background: rgba(92, 61, 46, 0.06);
+  border: 2px dashed rgba(92, 61, 46, 0.22);
+  flex-shrink: 0;
+}
+
+.dilly-motivation-photo-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 100px;
+  object-fit: cover;
+  object-position: center;
+}
+
+.dilly-motivation-photo-empty {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--dilly-brown-muted);
+  padding: 16px;
+}
+
+/* [hidden] must win — author display:flex / display:block can beat attribute otherwise */
+.dilly-motivation-photo-empty[hidden] {
+  display: none !important;
+}
+
+.dilly-motivation-photo-img[hidden] {
+  display: none !important;
+}
+
+.dilly-motivation-photo-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.dilly-motivation-photo-label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-family: var(--dilly-sans);
+  font-size: 13px;
+  font-weight: 600;
+  background: var(--dilly-brown);
+  color: var(--dilly-cream);
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(44, 24, 16, 0.12);
+}
+
+.dilly-motivation-photo-label:hover {
+  background: var(--dilly-brown-deep);
+}
+
+.dilly-motivation-photo-remove {
+  margin: 0;
+}
+
 .dilly-setting-help,
 .dilly-inline-note,
 .dilly-popup-footer p,
@@ -151,9 +641,9 @@
 .dilly-threshold-input-wrap {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  padding: 0 14px;
-  min-height: 40px;
+  gap: 2px;
+  padding: 0 10px;
+  min-height: 34px;
   border: 1px solid var(--dilly-line);
   border-radius: 999px;
   background: #fff;
@@ -240,6 +730,64 @@
 
 .dilly-switch input:checked + .dilly-switch-track::after {
   transform: translateX(18px);
+}
+
+/* pause header: label left, $ input right */
+.dilly-pause-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.dilly-pause-header .dilly-setting-label {
+  margin: 0;
+}
+
+.dilly-threshold-inline {
+  margin: 0;
+}
+
+.dilly-threshold-inline[hidden] {
+  display: none !important;
+}
+
+.dilly-threshold-inline .dilly-threshold-input {
+  width: 36px;
+}
+
+/* segmented control */
+.dilly-seg-control {
+  display: flex;
+  margin-top: 8px;
+  border-radius: 10px;
+  background: rgba(92, 61, 46, 0.07);
+  padding: 3px;
+}
+
+.dilly-seg-btn {
+  flex: 1;
+  appearance: none;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--dilly-ink);
+  font-family: var(--dilly-sans);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 160ms ease;
+}
+
+.dilly-seg-btn.is-active {
+  background: #fff;
+  color: var(--dilly-charcoal);
+  font-weight: 600;
+  box-shadow: 0 1px 4px rgba(44, 24, 16, 0.1);
+}
+
+.dilly-threshold-row[hidden] {
+  display: none !important;
 }
 
 /* timer chips */
@@ -369,10 +917,10 @@
   padding: 14px 7px;
   background: var(--dilly-brown);
   color: var(--dilly-cream);
-  font-family: var(--dilly-serif);
-  font-size: 13px;
+  font-family: "Snell Roundhand", "Snell Roundhand Script", cursive;
+  font-size: 15px;
   font-weight: 400;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.02em;
   border-radius: 10px 0 0 10px;
   cursor: pointer;
   box-shadow: -2px 0 12px rgba(44, 24, 16, 0.12);
@@ -431,10 +979,11 @@
 .dilly-overlay-card {
   position: relative;
   width: 100%;
-  max-width: 400px;
-  padding: 32px 28px 28px;
+  max-width: 420px;
+  padding: 20px 30px 28px;
   border-radius: 28px;
   background: var(--dilly-cream);
+  border: 2px solid var(--dilly-brown);
   box-shadow:
     0 32px 100px rgba(44, 24, 16, 0.16),
     0 6px 24px rgba(44, 24, 16, 0.08);
@@ -463,73 +1012,166 @@
   z-index: 1;
 }
 
-.dilly-overlay-site {
-  margin: 0 0 6px;
-  color: var(--dilly-brown);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+/* ─── HERO: headline + photo side-by-side ─── */
+
+.dilly-overlay-hero {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 18px;
 }
 
 .dilly-overlay-headline {
+  flex: 1;
+  min-width: 0;
   margin: 0;
   font-family: var(--dilly-serif);
-  font-size: 32px;
-  line-height: 1.05;
+  font-size: 34px;
+  line-height: 1.08;
   font-weight: 400;
+  color: var(--dilly-brown-deep);
+  text-align: left;
+}
+
+.dilly-overlay-headline em {
+  font-style: italic;
+}
+
+/* Photo circle + "D" badge */
+.dilly-overlay-photo-stack {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.dilly-overlay-photo-stack[hidden] {
+  display: none !important;
+}
+
+.dilly-overlay-photo-stack .dilly-overlay-motivation-wrap {
+  width: 80px !important;
+  height: 80px !important;
+  max-width: 80px !important;
+  max-height: 80px !important;
+  min-width: 80px;
+  min-height: 80px;
+  margin: 0;
+  border-radius: 50% !important;
+  overflow: hidden;
+  border: 2px solid rgba(92, 61, 46, 0.14);
+  box-shadow: 0 4px 16px rgba(44, 24, 16, 0.12);
+}
+
+.dilly-overlay-photo-stack .dilly-overlay-motivation-img {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  max-height: none !important;
+  object-fit: cover !important;
+  object-position: center;
+  border-radius: 50% !important;
+}
+
+.dilly-overlay-brand {
+  margin: 0 0 10px;
+  font-family: "Snell Roundhand", "Snell Roundhand Script", cursive;
+  font-size: 20px;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  color: var(--dilly-brown-deep);
+  text-align: left;
+}
+
+/* ─── GOAL PILL ─── */
+
+.dilly-overlay-goal-pill {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 22px;
+  border-radius: 18px;
+  background: var(--dilly-brown-mid);
+  margin-bottom: 20px;
+}
+
+.dilly-overlay-goal-pill[hidden] {
+  display: none !important;
+}
+
+.dilly-overlay-goal-pill .dilly-overlay-goal-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 252, 248, 0.5);
+}
+
+.dilly-overlay-goal-pill .dilly-overlay-goal-text {
+  margin: 0;
+  font-family: var(--dilly-serif);
+  font-size: 17px;
+  line-height: 1.3;
+  font-style: italic;
+  font-weight: 500;
+  color: var(--dilly-cream);
+}
+
+/* ─── BODY: store name, pause note, countdown ─── */
+
+.dilly-overlay-body {
+  margin-bottom: 20px;
+}
+
+.dilly-overlay-item-info {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 0 0 8px;
+}
+
+.dilly-overlay-site-name {
+  font-size: 14px;
+  font-weight: 700;
   color: var(--dilly-charcoal);
 }
 
-.dilly-overlay-copy {
-  margin: 10px 0 0;
-  color: var(--dilly-ink);
+.dilly-overlay-price {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--dilly-brown-deep);
+}
+
+.dilly-overlay-reminder {
+  margin: 0 0 16px;
   font-size: 13px;
   line-height: 1.5;
-}
-
-.dilly-overlay-meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 16px;
-}
-
-.dilly-overlay-pill {
-  padding: 7px 14px;
-  border: 1px solid var(--dilly-line);
-  border-radius: 999px;
-  background: #fff;
-  color: var(--dilly-charcoal);
-  font-size: 12px;
-  font-weight: 500;
-}
-
-.dilly-timer-section {
-  margin-top: 20px;
-}
-
-.dilly-timer-label {
-  margin: 0;
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--dilly-charcoal);
-}
-
-.dilly-progress-text {
-  margin: 4px 0 0;
   color: var(--dilly-ink);
-  font-size: 11.5px;
-  line-height: 1.4;
+  font-style: italic;
+}
+
+.dilly-overlay-timer-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.dilly-overlay-timer-text {
+  flex-shrink: 0;
+  font-family: var(--dilly-sans);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--dilly-brown-deep);
+  min-width: 32px;
+  text-align: right;
 }
 
 .dilly-progress-track {
+  flex: 1;
   position: relative;
-  width: 100%;
-  height: 3px;
-  margin-top: 12px;
+  height: 8px;
   border-radius: 999px;
-  background: rgba(92, 61, 46, 0.08);
+  background: rgba(92, 61, 46, 0.1);
   overflow: hidden;
 }
 
@@ -537,55 +1179,48 @@
   width: 100%;
   height: 100%;
   background: var(--dilly-brown);
-  transform-origin: left center;
   border-radius: 999px;
+  transition: width 150ms linear;
+  margin-left: auto;
 }
 
-.dilly-overlay-stat {
-  margin: 16px 0 0;
-  padding-top: 14px;
-  border-top: 1px solid var(--dilly-line);
-  color: var(--dilly-ink);
-  font-size: 12px;
-  line-height: 1.45;
-}
+/* ─── ACTIONS ─── */
 
 .dilly-overlay-actions {
   display: flex;
   gap: 10px;
-  margin-top: 20px;
 }
 
 .dilly-button {
   appearance: none;
   flex: 1;
-  min-height: 48px;
+  min-height: 52px;
   border: 0;
   border-radius: 999px;
   font-family: var(--dilly-sans);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   cursor: pointer;
   transition: all 160ms ease;
 }
 
 .dilly-button-primary {
-  background: var(--dilly-brown);
+  background: var(--dilly-brown-mid);
   color: var(--dilly-cream);
 }
 
 .dilly-button-primary:hover {
-  background: var(--dilly-brown-deep);
+  background: var(--dilly-brown);
 }
 
 .dilly-button-secondary {
   border: 1px solid var(--dilly-line);
-  background: #fff;
+  background: rgba(92, 61, 46, 0.06);
   color: var(--dilly-charcoal);
 }
 
 .dilly-button-secondary:hover {
-  background: var(--dilly-cream-deep);
+  background: rgba(92, 61, 46, 0.12);
 }
 
 .dilly-button:disabled {
@@ -595,6 +1230,48 @@
 
 .dilly-button:disabled:hover {
   transform: none;
+}
+
+/* Legacy class kept for settings-root */
+.dilly-overlay-motivation-wrap {
+  margin: 0 auto 14px;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  border: 2px solid rgba(92, 61, 46, 0.14);
+  box-shadow: 0 4px 16px rgba(44, 24, 16, 0.12);
+}
+
+.dilly-overlay-motivation-wrap[hidden] {
+  display: none !important;
+}
+
+.dilly-overlay-motivation-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+#dilly-settings-root .dilly-overlay-motivation-wrap {
+  width: 72px !important;
+  height: 72px !important;
+  max-width: 72px !important;
+  max-height: 72px !important;
+  min-width: 72px;
+  min-height: 72px;
+  aspect-ratio: 1;
+  border-radius: 50% !important;
+}
+
+#dilly-settings-root .dilly-overlay-motivation-img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center;
 }
 
 /* overlay close X button */

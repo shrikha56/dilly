@@ -7,7 +7,12 @@ function getDefaultState() {
       spendingThreshold: 30,
       pauseDurationSeconds: 30,
       intentionalMode: false,
-      isPaused: false
+      isPaused: false,
+      userGoal: "",
+      userName: "",
+      goalPromptDismissed: false,
+      goalSetAt: null,
+      motivationPhotoDataUrl: null
     },
     stats: {
       events: []

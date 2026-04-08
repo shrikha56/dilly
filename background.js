@@ -1,3 +1,5 @@
+importScripts("goal-progress.js");
+
 const STORAGE_KEY = "dilly-state";
 const DAY_MS = 24 * 60 * 60 * 1000;
 
@@ -7,7 +9,12 @@ function getDefaultState() {
       spendingThreshold: 30,
       pauseDurationSeconds: 30,
       intentionalMode: false,
-      isPaused: false
+      isPaused: false,
+      userGoal: "",
+      userName: "",
+      goalPromptDismissed: false,
+      goalSetAt: null,
+      motivationPhotoDataUrl: null
     },
     stats: {
       events: []
@@ -190,6 +197,11 @@ async function buildSnapshot(state) {
   const currentStreak = getCurrentStreak(dismissedDayKeys);
   const bestStreak = getBestStreak(dismissedDayKeys);
 
+  const goalProgress =
+    typeof globalThis.dillyComputeGoalProgress === "function"
+      ? globalThis.dillyComputeGoalProgress(events, state.settings)
+      : null;
+
   return {
     settings: state.settings,
     stats: {
@@ -201,6 +213,7 @@ async function buildSnapshot(state) {
       reconsideredThisMonth,
       currentStreak,
       bestStreak,
+      goalProgress,
       summaryLine:
         pausedThisWeek > 0
           ? `You've paused ${pausedThisWeek} purchase${pausedThisWeek === 1 ? "" : "s"} this week.`
